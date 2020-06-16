@@ -1,6 +1,7 @@
 package com.example.cattery.bootstrap;
 
 import com.example.cattery.model.*;
+import com.example.cattery.repository.BreedRepository;
 import com.example.cattery.repository.CatRepository;
 import com.example.cattery.repository.CommentRepository;
 import com.example.cattery.repository.UserRepository;
@@ -19,11 +20,14 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final CatRepository catRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final BreedRepository breedRepository;
 
-    public DataLoader(CatRepository catRepository, UserRepository userRepository, CommentRepository commentRepository) {
+    public DataLoader(CatRepository catRepository, UserRepository userRepository,
+                      CommentRepository commentRepository, BreedRepository breedRepository) {
         this.catRepository = catRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.breedRepository = breedRepository;
     }
 
     @Override
@@ -37,6 +41,13 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void loadData() {
+        // create breeds
+        Breed british = new Breed();
+        british.setName("British shorthair");
+        british.setDescription("The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair");
+
+        breedRepository.save(british);
+
         // create users
         User user1 = new User();
         user1.setName("John");
@@ -49,7 +60,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         // create cats
         Cat cat1 = new Cat();
         cat1.setName("Mimiko");
-        cat1.setBreed("British shorthair");
+        cat1.setBreed(british);
         cat1.setCatClass(CatClass.BREEDING);
         cat1.setStatus(CatStatus.SOLD);
         cat1.setColour("black golden spotted");
@@ -59,7 +70,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
         Cat cat2 = new Cat();
         cat2.setName("Kim");
-        cat2.setBreed("British shorthair");
+        cat2.setBreed(british);
         cat2.setBirthDate(LocalDate.of(2013, 3, 17));
         cat2.setGender(Gender.MALE);
         cat2.setStatus(CatStatus.SOLD);

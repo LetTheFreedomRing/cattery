@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CatRepositoryIT {
 
     private static final String CAT_NAME = "Cat";
-    private static final String CAT_BREED = "Breed";
     private static final String CAT_COLOUR = "Colour";
     private static final String CAT_EMS = "EMS";
     private static final LocalDate CAT_BIRTH_DATE = LocalDate.now();
@@ -38,7 +37,6 @@ class CatRepositoryIT {
         Cat cat = new Cat();
         cat.setName(CAT_NAME);
         cat.setBirthDate(CAT_BIRTH_DATE);
-        cat.setBreed(CAT_BREED);
         cat.setGender(CAT_GENDER);
         cat.setColour(CAT_COLOUR);
         cat.setEms(CAT_EMS);
@@ -63,12 +61,31 @@ class CatRepositoryIT {
         assertNotNull(foundCat.getId());
         assertEquals(CAT_NAME, foundCat.getName());
         assertEquals(CAT_BIRTH_DATE, foundCat.getBirthDate());
-        assertEquals(CAT_BREED, foundCat.getBreed());
         assertEquals(CAT_COLOUR, foundCat.getColour());
         assertEquals(CAT_CLASS, foundCat.getCatClass());
         assertEquals(CAT_STATUS, foundCat.getStatus());
         assertEquals(CAT_EMS, foundCat.getEms());
         assertEquals(CAT_GENDER, foundCat.getGender());
+    }
+
+    @Test
+    void breedIsStoredCorrectly(@Autowired BreedRepository breedRepository) {
+        // given
+        Cat cat = prepareCat();
+        Breed breed = new Breed();
+        cat.setBreed(breed);
+
+        // when
+        Breed savedBreed = breedRepository.save(breed);
+        Cat savedCat = repository.save(cat);
+
+        // then
+        assertEquals(1, breedRepository.count());
+        assertEquals(1, repository.count());
+
+        Breed foundBreed = repository.findById(savedCat.getId()).orElseThrow(NullPointerException::new).getBreed();
+
+        assertEquals(foundBreed.getId(), savedBreed.getId());
     }
 
     @Test

@@ -20,7 +20,8 @@ public class Cat extends BaseEntity {
     private CatStatus status;
     @Column(name="cat_class")
     private CatClass catClass;
-    private String breed;
+    @ManyToOne
+    private Breed breed;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
