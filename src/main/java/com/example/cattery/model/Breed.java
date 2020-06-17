@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -23,4 +24,9 @@ public class Breed {
     //todo : add image
     @OneToMany(mappedBy = "breed")
     private Set<Cat> cats = new HashSet<>();
+
+    public Set<Cat> getNCats(Integer n) {
+        if (cats.size() <= n) return cats;
+        return cats.stream().limit(n).collect(Collectors.toSet());
+    }
 }
