@@ -11,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Slf4j
@@ -46,8 +47,6 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         british.setName("British shorthair");
         british.setDescription("The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair");
 
-        breedRepository.save(british);
-
         // create users
         User user1 = new User();
         user1.setName("John");
@@ -62,22 +61,28 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cat1.setName("Mimiko");
         cat1.setBreed(british);
         cat1.setCatClass(CatClass.BREEDING);
+        british.getCats().add(cat1);
         cat1.setStatus(CatStatus.SOLD);
         cat1.setColour("black golden spotted");
         cat1.setEms("BRI ny 24");
         cat1.setGender(Gender.MALE);
+        cat1.setPrice(330);
         cat1.setBirthDate(LocalDate.of(2019, 2, 22));
+        cat1.setLastUpdated(LocalDate.now());
 
         Cat cat2 = new Cat();
         cat2.setName("Kim");
         cat2.setBreed(british);
+        british.getCats().add(cat2);
         cat2.setBirthDate(LocalDate.of(2013, 3, 17));
+        cat2.setLastUpdated(LocalDate.now());
         cat2.setGender(Gender.MALE);
         cat2.setStatus(CatStatus.SOLD);
         cat2.setColour("black golden blotched");
         cat2.setEms("BRI ny 22 64");
         cat2.setCatClass(CatClass.BREEDING);
         cat2.setOwner(user2);
+        cat2.setPrice(330);
         user2.getCats().add(cat2);
 
         // create comments
@@ -87,6 +92,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         comment.setUser(user1);
         comment.setCat(cat1);
 
+        breedRepository.save(british);
         userRepository.save(user1);
         userRepository.save(user2);
         catRepository.save(cat1);

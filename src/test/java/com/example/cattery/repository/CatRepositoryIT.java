@@ -24,6 +24,8 @@ class CatRepositoryIT {
     private static final Gender CAT_GENDER = Gender.MALE;
     private static final CatStatus CAT_STATUS = CatStatus.AVAILABLE;
     private static final CatClass CAT_CLASS = CatClass.PET;
+    private static final Integer CAT_PRICE = 200;
+    private static final LocalDate CAT_LAST_UPDATED = LocalDate.now();
 
     @Autowired
     private CatRepository repository;
@@ -42,6 +44,8 @@ class CatRepositoryIT {
         cat.setEms(CAT_EMS);
         cat.setStatus(CAT_STATUS);
         cat.setCatClass(CAT_CLASS);
+        cat.setPrice(CAT_PRICE);
+        cat.setLastUpdated(CAT_LAST_UPDATED);
         return cat;
     }
 
@@ -66,6 +70,8 @@ class CatRepositoryIT {
         assertEquals(CAT_STATUS, foundCat.getStatus());
         assertEquals(CAT_EMS, foundCat.getEms());
         assertEquals(CAT_GENDER, foundCat.getGender());
+        assertEquals(CAT_PRICE, foundCat.getPrice());
+        assertEquals(CAT_LAST_UPDATED, foundCat.getLastUpdated());
     }
 
     @Test

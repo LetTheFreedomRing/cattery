@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -15,6 +16,7 @@ public class Cat extends BaseEntity {
     private Gender gender;
     private String colour;
     private String ems;
+    private Integer price;
     @Column(name="birth_date")
     private LocalDate birthDate;
     private CatStatus status;
@@ -25,5 +27,7 @@ public class Cat extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
+    @Column(name = "last_updated")
+    private LocalDate lastUpdated;
 
 }
