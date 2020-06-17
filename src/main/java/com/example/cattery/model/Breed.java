@@ -25,8 +25,8 @@ public class Breed {
     @OneToMany(mappedBy = "breed")
     private Set<Cat> cats = new HashSet<>();
 
-    public Set<Cat> getNCats(Integer n) {
-        if (cats.size() <= n) return cats;
-        return cats.stream().limit(n).collect(Collectors.toSet());
+    public Set<Cat> getAvailableCats(Integer limit) {
+        if (cats.size() <= limit) return cats;
+        return cats.stream().filter(cat -> cat.getStatus().equals(CatStatus.AVAILABLE)).limit(limit).collect(Collectors.toSet());
     }
 }
