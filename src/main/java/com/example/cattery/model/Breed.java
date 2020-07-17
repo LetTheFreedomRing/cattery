@@ -21,7 +21,8 @@ public class Breed {
     private String name;
     @Lob
     private String description;
-    //todo : add image
+    @Lob
+    private Byte[] image;
     @OneToMany(mappedBy = "breed")
     private Set<Cat> cats = new HashSet<>();
 

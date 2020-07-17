@@ -5,13 +5,14 @@ import com.example.cattery.repository.BreedRepository;
 import com.example.cattery.repository.CatRepository;
 import com.example.cattery.repository.CommentRepository;
 import com.example.cattery.repository.UserRepository;
+import com.example.cattery.service.BreedImageService;
+import com.example.cattery.service.CatImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Slf4j
@@ -22,13 +23,18 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BreedRepository breedRepository;
+    private final CatImageService catImageService;
+    private final BreedImageService breedImageService;
 
     public DataLoader(CatRepository catRepository, UserRepository userRepository,
-                      CommentRepository commentRepository, BreedRepository breedRepository) {
+                      CommentRepository commentRepository, BreedRepository breedRepository,
+                      CatImageService catImageService, BreedImageService breedImageService) {
         this.catRepository = catRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.breedRepository = breedRepository;
+        this.catImageService = catImageService;
+        this.breedImageService = breedImageService;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         Breed british = new Breed();
         british.setName("British shorthair");
         british.setDescription("The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair");
+        british.setImage(breedImageService.getDefaultImageBytes());
 
         // create users
         User user1 = new User();
@@ -69,6 +76,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cat1.setPrice(330);
         cat1.setBirthDate(LocalDate.of(2019, 2, 22));
         cat1.setLastUpdated(LocalDate.now());
+        cat1.getImages().add(catImageService.getDefaultImageBytes());
 
         Cat cat2 = new Cat();
         cat2.setName("Kim");
@@ -83,6 +91,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cat2.setCatClass(CatClass.BREEDING);
         cat2.setOwner(user2);
         cat2.setPrice(330);
+        cat2.getImages().add(catImageService.getDefaultImageBytes());
         user2.getCats().add(cat2);
 
         // create comments

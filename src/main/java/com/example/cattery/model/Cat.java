@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +31,8 @@ public class Cat extends BaseEntity {
     private User owner;
     @Column(name = "last_updated")
     private LocalDate lastUpdated;
+    @ElementCollection
+    @Lob
+    private List<Byte[]> images = new ArrayList<>();
 
 }
