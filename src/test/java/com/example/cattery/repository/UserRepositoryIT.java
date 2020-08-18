@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,6 +51,19 @@ class UserRepositoryIT {
         assertNotNull(foundUser.getId());
         assertEquals(USER_NAME, foundUser.getName());
         assertEquals(USER_REGISTRATION_DATE, foundUser.getRegistrationDate());
+    }
+
+    @Test
+    void findByName() {
+        //given
+        User savedUser = repository.save(prepareUser());
+
+        // when
+        Collection<User> foundUsers = repository.findByName(USER_NAME);
+
+        // then
+        assertEquals(1, foundUsers.size());
+        assertEquals(savedUser, foundUsers.iterator().next());
     }
 
     @Test
