@@ -1,6 +1,6 @@
 package com.example.cattery.controller;
 
-import com.example.cattery.repository.BreedRepository;
+import com.example.cattery.service.BreedService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,16 +13,16 @@ public class IndexController {
     // indicates how many cats are displayed for each breed on index page
     private static final Integer CATS_LIMIT = 2;
 
-    private final BreedRepository breedRepository;
+    private final BreedService breedService;
 
-    public IndexController(BreedRepository breedRepository) {
-        this.breedRepository = breedRepository;
+    public IndexController(BreedService breedService) {
+        this.breedService = breedService;
     }
 
     @GetMapping({"/", "/index", "/index.html"})
     public String getIndexPage(Model model) {
         model.addAttribute("limitCats", CATS_LIMIT);
-        model.addAttribute("breeds", breedRepository.findAll());
+        model.addAttribute("breeds", breedService.getAll());
         return "index";
     }
 }

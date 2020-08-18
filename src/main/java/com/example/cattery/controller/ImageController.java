@@ -2,8 +2,8 @@ package com.example.cattery.controller;
 
 import com.example.cattery.model.Breed;
 import com.example.cattery.model.Cat;
-import com.example.cattery.repository.BreedRepository;
-import com.example.cattery.repository.CatRepository;
+import com.example.cattery.service.BreedService;
+import com.example.cattery.service.CatService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
@@ -19,18 +19,17 @@ import java.io.InputStream;
 @Slf4j
 public class ImageController {
 
-    private final CatRepository catRepository;
-    private final BreedRepository breedRepository;
+    private final CatService catService;
+    private final BreedService breedService;
 
-    public ImageController(CatRepository catRepository, BreedRepository breedRepository) {
-        this.catRepository = catRepository;
-        this.breedRepository = breedRepository;
+    public ImageController(CatService catService, BreedService breedService) {
+        this.catService = catService;
+        this.breedService = breedService;
     }
 
     @GetMapping("cat/{catId}/catimage")
     public void renderCatImageFromDb(@PathVariable(name = "catId") Long catId, HttpServletResponse response) {
-        // todo : throw NotFoundException
-        Cat cat = catRepository.findById(catId).orElseThrow(NullPointerException::new);
+        Cat cat = catService.getById(catId);
 
         if (cat.getImages().size() != 0) {
 
@@ -53,8 +52,7 @@ public class ImageController {
 
     @GetMapping("breed/{breedId}/breedimage")
     public void renderBreedImageFromDb(@PathVariable(name = "breedId") Long breedId, HttpServletResponse response) {
-        // todo : throw NotFoundException
-        Breed breed = breedRepository.findById(breedId).orElseThrow(NullPointerException::new);
+        Breed breed = breedService.getById(breedId);
 
         byte[] bytes = new byte[breed.getImage().length];
 

@@ -2,7 +2,7 @@ package com.example.cattery.controller;
 
 import com.example.cattery.model.Breed;
 import com.example.cattery.model.Cat;
-import com.example.cattery.repository.BreedRepository;
+import com.example.cattery.service.BreedService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 class IndexControllerTest {
 
     @Mock
-    private BreedRepository breedRepository;
+    private BreedService breedService;
 
     @InjectMocks
     private IndexController indexController;
@@ -40,13 +40,13 @@ class IndexControllerTest {
         Breed breed = new Breed();
         breed.getCats().addAll(Arrays.asList(new Cat(), new Cat(), new Cat())); // added 3 cats
 
-        Mockito.when(breedRepository.findAll()).thenReturn(Stream.of(breed).collect(Collectors.toSet()));
+        Mockito.when(breedService.getAll()).thenReturn(Stream.of(breed).collect(Collectors.toSet()));
 
         mvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("index"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("limitCats"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("breeds"));
-        Mockito.verify(breedRepository, Mockito.times(1)).findAll();
+        Mockito.verify(breedService, Mockito.times(1)).getAll();
     }
 }
