@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.repository.BreedRepository;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,7 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public Breed getById(Long id) {
-        // todo : throw NotFoundException here
-        return breedRepository.findById(id).orElseThrow(NullPointerException::new);
+        return breedRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override

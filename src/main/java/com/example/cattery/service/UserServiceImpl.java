@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.User;
 import com.example.cattery.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        // todo: throw NotFoundException
-        return userRepository.findById(id).orElseThrow(NullPointerException::new);
+        return userRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.repository.CatRepository;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat getById(Long id) {
-        // todo: throw not found exception
-        return catRepository.findById(id).orElseThrow(NullPointerException::new);
+        return catRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override

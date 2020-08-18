@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Comment;
 import com.example.cattery.repository.CommentRepository;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getById(Long id) {
-        // todo : throw NotFoundException
-        return commentRepository.findById(id).orElseThrow(NullPointerException::new);
+        return commentRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override

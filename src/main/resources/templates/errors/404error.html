@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>404 Not Found Error</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Oops!</h1>
+                <div class="error-details" th:text="${exception.getMessage()}">
+                    Sorry, an error has occurred, Requested page not found!
+                </div>
+                <div class="error-actions">
+                    <a href="http://www.jquery2dotnet.com" class="btn btn-secondary btn-lg"><span class="glyphicon glyphicon-home"></span>
+                        Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapi.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- JavaScript library -->
+<script src="https://maxcdn.bootstrap.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

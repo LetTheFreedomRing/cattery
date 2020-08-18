@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Comment;
 import com.example.cattery.repository.CommentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +87,7 @@ class CommentServiceTest {
         // given
         Mockito.when(commentRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NullPointerException.class, () -> commentService.getById(1L));
+        assertThrows(NotFoundException.class, () -> commentService.getById(1L));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.User;
 import com.example.cattery.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
         // then
-        assertThrows(NullPointerException.class, () -> userService.getById(1L));
+        assertThrows(NotFoundException.class, () -> userService.getById(1L));
     }
 
     @Test
