@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title th:text="${breed.name}">Breed</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+  <main role="main">
+      <div class="album py-5 bg-light">
+          <div class="container">
+              <h2 class="card-title" th:text="${breed.name}">Breed name</h2>
+              <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/breed/' + ${breed.id} + '/breedimage'}" width="400" height="300">
+              <p th:text="${breed.overview}"> The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair </p>
+              <button class="btn btn-default collapsible" onclick="setContent('History')">History</button>
+              <button class="btn btn-default collapsible" onclick="setContent('Care')">Care</button>
+              <button class="btn btn-default collapsible" onclick="setContent('Temper')">Temper</button>
+              <div id="content"></div>
+              </div>
+          <div style="clear:both;"></div>
+      </div>
+
+      <div class="container">
+          <th:block th:each="cat : ${breed.cats}">
+                  <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/cat/' + ${cat.id} + '/catimage'}" width="400" height="300">
+              <div class="row">
+                  <table class="table table-striped w-auto">
+                      <tr>
+                          <td>Name: </td>
+                          <td th:text="${cat.name}">Name</td>
+                      </tr>
+                      <tr>
+                          <td>Class: </td>
+                          <td th:text="${cat.catClass}">Class</td>
+                      </tr>
+                      <tr>
+                        <td>Gender: </td>
+                        <td th:text="${cat.gender}">Gender</td>
+                    </tr>
+                      <tr>
+                          <td>Colour: </td>
+                          <td th:text="${cat.colour}">Colour</td>
+                      </tr>
+                      <tr>
+                          <td>Price: </td>
+                          <td th:text="${cat.price}">Price</td>
+                      </tr>
+                      <tr>
+                          <td>Status: </td>
+                          <td th:text="${cat.status}">Status</td>
+                      </tr>
+                  </table>
+
+              </div>
+              <button type="button" class="btn btn-default">Details</button>
+              <button type="button" class="btn btn-default">Buy</button>
+
+              <hr>
+          </th:block>
+      </div>
+  </main>
+
+  <script th:inline="javascript">
+  function setContent(text) {
+        // todo: remove this function and set content inside tag
+        var content = "";
+        if (text == "History") {
+            content = /*[[${breed.history}]]*/;
+        } else if (text == "Care") {
+            content = /*[[${breed.care}]]*/;
+        } else if (text == "Temper") {
+            content = /*[[${breed.temper}]]*/;
+        }
+        document.getElementById("content").innerHTML = content;
+    }
+</script>
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapi.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- JavaScript library -->
+  <script src="https://maxcdn.bootstrap.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

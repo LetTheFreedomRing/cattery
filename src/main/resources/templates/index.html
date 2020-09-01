@@ -54,10 +54,10 @@
                             <img class="bd-placeholder-img card-img-top" th:src="@{'/breed/' + ${breed.id} + '/breedimage'}" width="100%" height="400">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${breed.name}"></h5>
-                                <p class="card-test" th:text="${breed.description}"></p>
+                                <p class="card-test" th:text="${breed.overview}"></p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View more</button>
+                                        <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/breed/{id}(id=${breed.id})}">View more</a>
                                     </div>
                                 </div>
                             </div>

@@ -20,7 +20,13 @@ public class Breed {
     private Long id;
     private String name;
     @Lob
-    private String description;
+    private String overview;
+    @Lob
+    private String history;
+    @Lob
+    private String temper;
+    @Lob
+    private String care;
     @Lob
     private Byte[] image;
     @OneToMany(mappedBy = "breed")
