@@ -25,7 +25,7 @@
 
       <div class="container">
           <th:block th:each="cat : ${breed.cats}">
-                  <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/cat/' + ${cat.id} + '/catimage'}" width="400" height="300">
+                  <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/cat/' + ${cat.id} + '/catimage/0'}" width="400" height="300">
               <div class="row">
                   <table class="table table-striped w-auto">
                       <tr>
@@ -55,7 +55,7 @@
                   </table>
 
               </div>
-              <button type="button" class="btn btn-default">Details</button>
+              <a type="button" class="btn btn-default" th:href="@{/cat/{id}(id=${cat.id})}">Details</a>
               <button type="button" class="btn btn-default">Buy</button>
 
               <hr>

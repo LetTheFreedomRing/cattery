@@ -64,7 +64,7 @@ class BreedControllerTest {
         Mockito.when(breedService.getById(ArgumentMatchers.anyLong())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}", BREED_ID))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
         Mockito.verify(breedService, Mockito.times(1)).getById(ArgumentMatchers.anyLong());
     }
 }

@@ -15,7 +15,7 @@ public abstract class ImageService {
 
     public abstract Byte[] getDefaultImageBytes();
 
-    protected Byte[] getDefaultImageBytes(Resource image) {
+    protected Byte[] getImageBytes(Resource image) {
         try {
             File imageFile =  image.getFile();
             log.debug("File exists : " + imageFile.exists());

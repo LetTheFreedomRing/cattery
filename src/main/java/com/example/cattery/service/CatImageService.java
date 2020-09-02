@@ -47,6 +47,6 @@ public class CatImageService extends ImageService {
 
     @Override
     public Byte[] getDefaultImageBytes() {
-        return getDefaultImageBytes(defaultImage);
+        return getImageBytes(defaultImage);
     }
 }

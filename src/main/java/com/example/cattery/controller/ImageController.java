@@ -27,13 +27,15 @@ public class ImageController {
         this.breedService = breedService;
     }
 
-    @GetMapping("cat/{catId}/catimage")
-    public void renderCatImageFromDb(@PathVariable(name = "catId") Long catId, HttpServletResponse response) {
+    @GetMapping("cat/{catId}/catimage/{imageNum}")
+    public void renderCatImageFromDb(@PathVariable(name = "catId") Long catId,
+                                     @PathVariable(name = "imageNum") Integer imageNum,
+                                     HttpServletResponse response) {
         Cat cat = catService.getById(catId);
 
-        if (cat.getImages().size() != 0) {
+        if (cat.getImages().size() != 0 && cat.getImages().size() > imageNum) {
 
-            Byte[] image = cat.getImages().get(0);
+            Byte[] image = cat.getImages().get(imageNum);
             byte[] bytes = new byte[image.length];
 
             int i = 0;

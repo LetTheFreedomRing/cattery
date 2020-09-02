@@ -66,7 +66,7 @@
                     <th:block th:each="cat : ${breed.getAvailableCats(limitCats)}">
                         <div class="col-sm-3">
                             <div class="card mb-4 shadow-sm">
-                                <img class="bd-placeholder-img card-img-top" th:src="@{'/cat/' + ${cat.id} + '/catimage'}" width="100%" height="225">
+                                <img class="bd-placeholder-img card-img-top" th:src="@{'/cat/' + ${cat.id} + '/catimage/0'}" width="100%" height="225">
                                 <div class="card-body">
                                     <p th:inline="text">
                                         <b>Name: </b>
@@ -87,7 +87,7 @@
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                            <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}(id=${cat.id})}">View</a>
                                             <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                                         </div>
                                         <small class="text-muted" th:text="${'Updated: ' + cat.lastUpdated}"></small>
