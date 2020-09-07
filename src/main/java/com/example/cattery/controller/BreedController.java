@@ -31,7 +31,16 @@ public class BreedController {
 
     @GetMapping("/create")
     public String createBreedPage(Model model) {
-        model.addAttribute("breed", new Breed());
+        return createOrUpdate(new Breed(), model);
+    }
+
+    @GetMapping("/{breedId}/edit")
+    public String updateBreedPage(@PathVariable("breedId") Long breedId, Model model) {
+        return createOrUpdate(breedService.getById(breedId), model);
+    }
+
+    private String createOrUpdate(Breed breed, Model model) {
+        model.addAttribute("breed", breed);
         return "breed/new";
     }
 

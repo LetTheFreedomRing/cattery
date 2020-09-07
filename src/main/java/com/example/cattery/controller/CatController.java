@@ -38,7 +38,16 @@ public class CatController {
         Cat newCat = new Cat();
         // todo: remove this after creating CatCommand
         newCat.setBreed(new Breed());
-        model.addAttribute("cat", newCat);
+        return createOrUpdate(newCat, model);
+    }
+
+    @GetMapping("/{catId}/edit")
+    public String updateCatPage(@PathVariable("catId") Long catId, Model model) {
+        return createOrUpdate(catService.getById(catId), model);
+    }
+
+    private String createOrUpdate(Cat cat, Model model) {
+        model.addAttribute("cat", cat);
         model.addAttribute("breeds", breedService.getAll());
         return "cat/new";
     }
