@@ -2,6 +2,7 @@ package com.example.cattery.controller;
 
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
+import com.example.cattery.service.BreedService;
 import com.example.cattery.service.CatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,9 @@ class CatControllerTest {
     @Mock
     private CatService catService;
 
+    @Mock
+    private BreedService breedService;
+
     @InjectMocks
     private CatController catController;
 
@@ -26,7 +30,7 @@ class CatControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        catController = new CatController(catService);
+        catController = new CatController(catService, breedService);
         mockMvc = MockMvcBuilders.standaloneSetup(catController).build();
     }
 
@@ -38,7 +42,7 @@ class CatControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cat/{catId}", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("cat"))
+                .andExpect(MockMvcResultMatchers.view().name("cat/view"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("cat"));
         Mockito.verify(catService, Mockito.times(1)).getById(ArgumentMatchers.anyLong());
     }

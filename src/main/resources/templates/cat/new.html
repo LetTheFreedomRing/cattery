@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cat Form</title>
+
+    <<!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form th:object="${cat}" th:action="@{/cat/}" enctype="multipart/form-data" method="post">
+
+                <div class="pannel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Edit Cat Information</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Name:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" th:field="*{name}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Breed:</label>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <select class="form-control" th:field="*{breed.name}">
+                                        <option value="">Choose from existing</option>
+                                        <option th:each="breedOpt : ${breeds}" th:value="${breedOpt.name}" th:text="${breedOpt.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <button class="btn btn-secondary" type="button">New</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Images:</label>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <input id="image_files" name="image_files" type="file" class="file" multiple>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Gender:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <select th:field="*{gender}">
+                                        <option th:each="gender : ${T(com.example.cattery.model.Gender).values()}"
+                                                th:value="${gender}"
+                                                th:text="${gender.displayValue}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Colour:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" th:field="*{colour}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Price:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="number" min="1.00" max="10000.00" step="0.01" class="form-control" th:field="*{price}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>EMS:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" th:field="*{ems}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Birth date:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="date" class="form-control" th:field="*{birthDate}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Class:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <select th:field="*{catClass}">
+                                        <option th:each="catClass : ${T(com.example.cattery.model.CatClass).values()}"
+                                                th:value="${catClass}"
+                                                th:text="${catClass.displayValue}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Status:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <select th:field="*{status}">
+                                        <option th:each="status : ${T(com.example.cattery.model.CatStatus).values()}"
+                                                th:value="${status}"
+                                                th:text="${status.displayValue}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapi.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- JavaScript library -->
+<script src="https://maxcdn.bootstrap.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

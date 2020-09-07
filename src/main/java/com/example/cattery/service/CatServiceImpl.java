@@ -5,6 +5,7 @@ import com.example.cattery.model.Cat;
 import com.example.cattery.repository.CatRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,8 +14,11 @@ public class CatServiceImpl implements CatService {
 
     private final CatRepository catRepository;
 
-    public CatServiceImpl(CatRepository catRepository) {
+    private final CatImageService catImageService;
+
+    public CatServiceImpl(CatRepository catRepository, CatImageService catImageService) {
         this.catRepository = catRepository;
+        this.catImageService = catImageService;
     }
 
     @Override
@@ -41,7 +45,11 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat create(Cat cat) {
-        // todo: add default image for cat if not exists
+        if (cat.getImages().size() == 0) {
+            Byte[] image = catImageService.getDefaultImageBytes();
+            cat.getImages().add(image);
+        }
+        cat.setLastUpdated(LocalDate.now());
         return catRepository.save(cat);
     }
 }

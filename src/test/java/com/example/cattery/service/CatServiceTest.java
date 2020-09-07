@@ -19,13 +19,16 @@ public class CatServiceTest {
     @Mock
     private CatRepository catRepository;
 
+    @Mock
+    private CatImageService catImageService;
+
     @InjectMocks
     private CatServiceImpl catService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        catService = new CatServiceImpl(catRepository);
+        catService = new CatServiceImpl(catRepository, catImageService);
     }
 
     @Test
