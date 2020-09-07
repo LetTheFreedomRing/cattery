@@ -53,7 +53,7 @@ class BreedControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}", BREED_ID))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("breed"))
+                .andExpect(MockMvcResultMatchers.view().name("breed/view"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("breed"));
         Mockito.verify(breedService, Mockito.times(1)).getById(ArgumentMatchers.anyLong());
     }

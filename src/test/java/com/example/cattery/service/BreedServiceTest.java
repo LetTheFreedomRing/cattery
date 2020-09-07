@@ -18,13 +18,16 @@ class BreedServiceTest {
     @Mock
     private BreedRepository breedRepository;
 
+    @Mock
+    private BreedImageService breedImageService;
+
     @InjectMocks
     private BreedServiceImpl breedService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        breedService = new BreedServiceImpl(breedRepository);
+        breedService = new BreedServiceImpl(breedRepository, breedImageService);
     }
 
     @Test

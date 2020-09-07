@@ -13,8 +13,11 @@ public class BreedServiceImpl implements BreedService {
 
     private final BreedRepository breedRepository;
 
-    public BreedServiceImpl(BreedRepository breedRepository) {
+    private final BreedImageService breedImageService;
+
+    public BreedServiceImpl(BreedRepository breedRepository, BreedImageService breedImageService) {
         this.breedRepository = breedRepository;
+        this.breedImageService = breedImageService;
     }
 
     @Override
@@ -47,6 +50,9 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public Breed create(Breed breed) {
         // todo : check name for uniqueness
+        if (breed.getImage() == null) {
+            breed.setImage(breedImageService.getDefaultImageBytes());
+        }
         return breedRepository.save(breed);
     }
 }

@@ -1,13 +1,19 @@
 package com.example.cattery.controller;
 
+import com.example.cattery.Utils;
+import com.example.cattery.model.Breed;
 import com.example.cattery.service.BreedService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
+@Slf4j
 @RequestMapping("/breed")
 public class BreedController {
 
@@ -20,6 +26,25 @@ public class BreedController {
     @GetMapping("/{breedId}")
     public String getBreedPage(@PathVariable(name = "breedId") Long breedId, Model model) {
         model.addAttribute("breed", breedService.getById(breedId));
-        return "breed";
+        return "breed/view";
+    }
+
+    @GetMapping("/create")
+    public String createBreedPage(Model model) {
+        model.addAttribute("breed", new Breed());
+        return "breed/new";
+    }
+
+    @PostMapping("/")
+    public String createOrUpdate(@ModelAttribute("breed") Breed breed, @RequestParam("image_file") MultipartFile image, BindingResult result) {
+        if (!image.isEmpty()) {
+            try {
+                breed.setImage(Utils.convert(image.getBytes()));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        Breed savedBreed = breedService.create(breed);
+        return "redirect:/breed/" + savedBreed.getId();
     }
 }
