@@ -6,6 +6,7 @@ import com.example.cattery.service.BreedService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -66,5 +67,54 @@ class BreedControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}", BREED_ID))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
         Mockito.verify(breedService, Mockito.times(1)).getById(ArgumentMatchers.anyLong());
+    }
+
+    @Test
+    void createBreedPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/breed/create"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("breed/new"))
+                .andExpect(MockMvcResultMatchers.model().attribute("breed", new Breed()));
+    }
+
+    @Test
+    void updateBreedPage() throws Exception {
+        // given
+        Mockito.when(breedService.getById(ArgumentMatchers.anyLong())).thenReturn(new Breed());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}/edit", 1L))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("breed/new"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("breed"));
+    }
+
+    @Test
+    void create() throws Exception {
+        // given
+        Breed breed = new Breed();
+        breed.setId(BREED_ID);
+        MockMultipartFile file = new MockMultipartFile("image_file", "testing.txt",
+                "text/plain", "Dummy".getBytes());
+        Mockito.when(breedService.create(ArgumentMatchers.any())).thenReturn(breed);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .multipart("/breed/").file(file)
+                        .param("name", BREED_NAME)
+                        .param("overview", BREED_OVERVIEW)
+                        .param("history", BREED_HISTORY)
+                        .param("care", BREED_CARE)
+                        .param("temper", BREED_TEMPER))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/breed/" + BREED_ID));
+        Mockito.verify(breedService, Mockito.times(1)).create(ArgumentMatchers.any());
+    }
+
+    @Test
+    void delete() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}/delete", 1L))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
+
+        Mockito.verify(breedService, Mockito.times(1)).deleteById(1L);
     }
 }

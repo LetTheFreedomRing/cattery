@@ -1,5 +1,6 @@
 package com.example.cattery.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,11 +14,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"cats"}, callSuper = false)
 @Table(name = "breed")
-public class Breed {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Breed extends BaseEntity {
     private String name;
     @Lob
     private String overview;

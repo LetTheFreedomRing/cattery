@@ -113,8 +113,6 @@ class CommentRepositoryIT {
 
         Collection<Comment> notFoundComments = commentRepository.findByCatId(100L);
         assertEquals(0, notFoundComments.size());
-
-        catRepository.deleteAll();
     }
 
     @Test

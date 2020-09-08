@@ -1,5 +1,6 @@
 package com.example.cattery.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "cats")
+@EqualsAndHashCode(exclude = {"owner", "comments"}, callSuper = false)
 public class Cat extends BaseEntity {
     private String name;
     private Gender gender;
