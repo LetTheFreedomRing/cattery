@@ -56,4 +56,10 @@ public class BreedController {
         Breed savedBreed = breedService.create(breed);
         return "redirect:/breed/" + savedBreed.getId();
     }
+
+    @GetMapping("/{breedId}/delete")
+    public String delete(@PathVariable("breedId") Long breedId) {
+        breedService.deleteById(breedId);
+        return "redirect:/";
+    }
 }

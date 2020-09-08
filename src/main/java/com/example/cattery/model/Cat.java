@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +25,13 @@ public class Cat extends BaseEntity {
     private CatStatus status;
     @Column(name="cat_class")
     private CatClass catClass;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Breed breed;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cat")
+    private List<Comment> comments = new ArrayList<>();
     @Column(name = "last_updated")
     private LocalDate lastUpdated;
     @ElementCollection

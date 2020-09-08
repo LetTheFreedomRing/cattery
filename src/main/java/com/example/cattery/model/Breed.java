@@ -29,7 +29,7 @@ public class Breed {
     private String care;
     @Lob
     private Byte[] image;
-    @OneToMany(mappedBy = "breed")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "breed")
     private Set<Cat> cats = new HashSet<>();
 
     public Set<Cat> getAvailableCats(Integer limit) {

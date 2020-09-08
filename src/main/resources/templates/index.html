@@ -89,8 +89,9 @@
                                         <div class="btn-group">
                                             <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}(id=${cat.id})}">View</a>
                                             <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
+                                            <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>
                                         </div>
-                                        <small class="text-muted" th:text="${'Updated: ' + cat.lastUpdated}"></small>
+                                        <small class="text-muted ml-2" th:text="${'Updated: ' + cat.lastUpdated}"></small>
                                     </div>
                                 </div>
                             </div>

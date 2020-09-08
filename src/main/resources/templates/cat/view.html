@@ -115,6 +115,8 @@
         </table>
             <button type="button" class="btn btn-default">Buy</button>
             <button type="button" class="btn btn-default">Add to wishlist</button>
+            <a type="button" class="btn btn-default" th:href="@{cat/{catId}/edit(catId=${cat.id})}">Edit</a>
+            <a type="button" class="btn btn-default" th:href="@{cat/{catId}/delete(catId=${cat.id})}">Delete</a>
         </div>
 
         <div class="col-md-4">

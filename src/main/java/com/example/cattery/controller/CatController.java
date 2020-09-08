@@ -69,4 +69,10 @@ public class CatController {
         Cat savedCat = catService.create(cat);
         return "redirect:/cat/" + savedCat.getId();
     }
+
+    @GetMapping("/{catId}/delete")
+    public String delete(@PathVariable("catId") Long catId) {
+        catService.deleteById(catId);
+        return "redirect:/";
+    }
 }
