@@ -120,6 +120,9 @@ class CommentRepositoryIT {
         // given
         User user = new User();
         user.setName("User");
+        user.setEmail("bla@main.com");
+        user.setPassword("password");
+        user.setMatchingPassword("password");
 
         User savedUser = userRepository.save(user);
 

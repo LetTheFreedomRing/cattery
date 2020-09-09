@@ -1,9 +1,11 @@
 package com.example.cattery.service;
 
 import com.example.cattery.exceptions.NotFoundException;
+import com.example.cattery.exceptions.UserAlreadyExistException;
 import com.example.cattery.model.User;
 import com.example.cattery.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,8 +47,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user) {
-        // check name for uniqueness
+    @Transactional
+    public User create(User user) throws UserAlreadyExistException {
+        if (emailExist(user.getEmail())) {
+            throw new UserAlreadyExistException(
+                    "There is an account with that email address: " +  user.getEmail());
+        }
         return userRepository.save(user);
+    }
+
+    private boolean emailExist(String email) {
+        return userRepository.findByEmail(email) != null;
     }
 }

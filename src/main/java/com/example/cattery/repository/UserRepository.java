@@ -8,4 +8,6 @@ import java.util.Collection;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     Collection<User> findByName(String name);
+
+    User findByEmail(String email);
 }

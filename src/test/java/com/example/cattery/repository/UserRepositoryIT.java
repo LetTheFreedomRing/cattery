@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 class UserRepositoryIT {
     private static final String USER_NAME = "NAME";
+    private static final String USER_EMAIL = "bla@mail.com";
+    private static final String USER_PASSWORD = "password";
+    private static final String USER_MATCHING_PASSWORD = "password";
     private static final LocalDate USER_REGISTRATION_DATE = LocalDate.now();
 
     @Autowired
@@ -31,6 +34,9 @@ class UserRepositoryIT {
     private static User prepareUser() {
         User user = new User();
         user.setName(USER_NAME);
+        user.setMatchingPassword(USER_MATCHING_PASSWORD);
+        user.setPassword(USER_PASSWORD);
+        user.setEmail(USER_EMAIL);
         user.setRegistrationDate(USER_REGISTRATION_DATE);
         return user;
     }
