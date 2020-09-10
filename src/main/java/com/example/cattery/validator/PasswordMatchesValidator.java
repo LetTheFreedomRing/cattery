@@ -1,6 +1,6 @@
 package com.example.cattery.validator;
 
-import com.example.cattery.model.User;
+import com.example.cattery.dto.UserDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,7 +13,7 @@ public class PasswordMatchesValidator
     }
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        User user = (User) obj;
+        UserDTO user = (UserDTO) obj;
         return user.getPassword().equals(user.getMatchingPassword());
     }
 }

@@ -73,14 +73,12 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         user1.setRegistrationDate(LocalDate.now());
         user1.setEmail("user1@somemail.com");
         user1.setPassword("password1");
-        user1.setMatchingPassword("password1");
 
         User user2 = new User();
         user2.setName("Mary");
         user2.setRegistrationDate(LocalDate.now());
         user2.setEmail("user2@somemail.com");
         user2.setPassword("password2");
-        user2.setMatchingPassword("password2");
 
         // create cats
         Cat cat1 = new Cat();

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Invalid token</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<h1 th:text="${param.message[0]}">Error Message</h1>
+    <a th:href="@{/user/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
+</body>
+</html>

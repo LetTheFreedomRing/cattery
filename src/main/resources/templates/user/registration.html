@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Registration Form</title>
 
-    <<!-- Bootstrap core CSS -->
+    <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
@@ -13,8 +13,6 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form th:object="${user}" th:action="@{/user/}" method="post">
-
-                <input type="hidden" th:field="*{id}"/>
                 <div class="pannel-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
