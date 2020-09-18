@@ -3,14 +3,17 @@ package com.example.cattery.service;
 import com.example.cattery.dto.UserDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
+import com.example.cattery.model.Role;
 import com.example.cattery.model.User;
 import com.example.cattery.model.VerificationToken;
+import com.example.cattery.repository.RoleRepository;
 import com.example.cattery.repository.UserRepository;
 import com.example.cattery.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -26,13 +29,19 @@ class UserServiceTest {
     @Mock
     private VerificationTokenRepository tokenRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private RoleRepository roleRepository;
+
     @InjectMocks
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository, tokenRepository);
+        userService = new UserServiceImpl(userRepository, tokenRepository, roleRepository, passwordEncoder);
     }
 
     @Test
@@ -75,7 +84,9 @@ class UserServiceTest {
     void create() {
         // given
         User user = new User();
+        Role role = new Role();
         Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(user);
+        Mockito.when(roleRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Optional.of(role));
 
         // when
         User savedUser = userService.registerNewAccount(new UserDTO());
@@ -88,8 +99,10 @@ class UserServiceTest {
     void registerNewAccount() {
         // given
         final User user = new User();
+        Role role = new Role();
         Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(user);
         Mockito.when(userRepository.findByEmail(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+        Mockito.when(roleRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Optional.of(role));
 
         // when
         final UserDTO userDTO = new UserDTO();

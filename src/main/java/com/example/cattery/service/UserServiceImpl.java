@@ -4,14 +4,16 @@ import com.example.cattery.dto.UserDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
 import com.example.cattery.model.User;
+import com.example.cattery.repository.RoleRepository;
 import com.example.cattery.repository.UserRepository;
 import com.example.cattery.model.VerificationToken;
 import com.example.cattery.repository.VerificationTokenRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -21,9 +23,15 @@ public class UserServiceImpl implements UserService {
 
     private final VerificationTokenRepository tokenRepository;
 
-    public UserServiceImpl(UserRepository userRepository, VerificationTokenRepository tokenRepository) {
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, VerificationTokenRepository tokenRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,8 +58,9 @@ public class UserServiceImpl implements UserService {
         }
         final User user = new User();
         user.setName(userDTO.getName());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
+        user.setRoles(Collections.singleton(roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("Role not found"))));
         return userRepository.save(user);
     }
 

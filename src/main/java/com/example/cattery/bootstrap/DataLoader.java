@@ -1,19 +1,18 @@
 package com.example.cattery.bootstrap;
 
 import com.example.cattery.model.*;
-import com.example.cattery.repository.BreedRepository;
-import com.example.cattery.repository.CatRepository;
-import com.example.cattery.repository.CommentRepository;
-import com.example.cattery.repository.UserRepository;
+import com.example.cattery.repository.*;
 import com.example.cattery.service.BreedImageService;
 import com.example.cattery.service.CatImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -25,16 +24,24 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final BreedRepository breedRepository;
     private final CatImageService catImageService;
     private final BreedImageService breedImageService;
+    private final RoleRepository roleRepository;
+    private final PrivilegeRepository privilegeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DataLoader(CatRepository catRepository, UserRepository userRepository,
                       CommentRepository commentRepository, BreedRepository breedRepository,
-                      CatImageService catImageService, BreedImageService breedImageService) {
+                      CatImageService catImageService, BreedImageService breedImageService,
+                      RoleRepository roleRepository, PrivilegeRepository privilegeRepository,
+                      PasswordEncoder passwordEncoder) {
         this.catRepository = catRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.breedRepository = breedRepository;
         this.catImageService = catImageService;
         this.breedImageService = breedImageService;
+        this.roleRepository = roleRepository;
+        this.privilegeRepository = privilegeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -46,6 +53,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         log.debug("Cats count : " + catRepository.count());
         log.debug("Comments count : " + commentRepository.count());
     }
+
+
 
     private void loadData() {
         // create breeds
@@ -67,18 +76,32 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 "                  It’s a good idea to keep a British Shorthair as an indoor-only cat to protect him from diseases spread by other cats, attacks by dogs or coyotes, and the other dangers that face cats who go outdoors, such as being hit by a car. British Shorthairs who go outdoors also run the risk of being stolen by someone who would like to have such a beautiful cat without paying for it.");
         british.setImage(breedImageService.getDefaultImageBytes());
 
+        Privilege readPrivilege
+                = createPrivilegeIfNotFound("READ_PRIVILEGE");
+        Privilege writePrivilege
+                = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+
+        List<Privilege> adminPrivileges = Arrays.asList(
+                readPrivilege, writePrivilege);
+        Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        Role userRole = createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
+
         // create users
         User user1 = new User();
         user1.setName("John");
         user1.setRegistrationDate(LocalDate.now());
         user1.setEmail("user1@somemail.com");
-        user1.setPassword("password1");
+        user1.getRoles().add(adminRole);
+        user1.setEnabled(true);
+        user1.setPassword(passwordEncoder.encode("password1"));
 
         User user2 = new User();
         user2.setName("Mary");
         user2.setRegistrationDate(LocalDate.now());
         user2.setEmail("user2@somemail.com");
-        user2.setPassword("password2");
+        user2.getRoles().add(userRole);
+        user2.setEnabled(true);
+        user2.setPassword(passwordEncoder.encode("password2"));
 
         // create cats
         Cat cat1 = new Cat();
@@ -124,5 +147,29 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         catRepository.save(cat1);
         catRepository.save(cat2);
         commentRepository.save(comment);
+    }
+
+    @Transactional
+    private Privilege createPrivilegeIfNotFound(String name) {
+        Optional<Privilege> optionalPrivilege = privilegeRepository.findByName(name);
+        if (!optionalPrivilege.isPresent()) {
+            Privilege privilege = new Privilege();
+            privilege.setName(name);
+            return privilegeRepository.save(privilege);
+        }
+        return optionalPrivilege.get();
+    }
+
+    @Transactional
+    private Role createRoleIfNotFound(String name, Collection<Privilege> privileges) {
+
+        Optional<Role> optionalRole = roleRepository.findByName(name);
+        if (!optionalRole.isPresent()) {
+            Role role = new Role();
+            role.setName(name);
+            role.setPrivileges(privileges);
+            return roleRepository.save(role);
+        }
+        return optionalRole.get();
     }
 }
