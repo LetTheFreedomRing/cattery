@@ -31,11 +31,11 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user/login*", "/user/logout*", "/user/registration*", "/user/registrationConfirm*",
-                        "/user/bad*", "/emailError*", "/resources/**").permitAll()
-                .antMatchers("/invalidSession*").anonymous()
-                .antMatchers("/user/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-                .anyRequest().hasAuthority("READ_PRIVILEGE")
+                .antMatchers("/user/*/delete", "/user/*/edit",
+                        "/cat/create", "/cat/*/edit", "/cat/*/delete",
+                        "/breed/create", "/breed/*/edit", "/breed/*/delete").hasAuthority("WRITE_PRIVILEGE")
+                .antMatchers("/logout").hasAnyAuthority("READ_PRIVILEGE", "WRITE_PRIVILEGE")
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/user/login")
@@ -45,7 +45,7 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .invalidateHttpSession(false)
-                .logoutSuccessUrl("/logout?logSucc=true")
+                .logoutSuccessUrl("/")
                 .permitAll()
                 .and();
     }
