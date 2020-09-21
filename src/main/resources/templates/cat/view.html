@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title th:text="${cat.name}">Cat</title>
@@ -117,8 +118,10 @@
         </table>
             <button type="button" class="btn btn-default">Buy</button>
             <button type="button" class="btn btn-default">Add to wishlist</button>
-            <a type="button" class="btn btn-default" th:href="@{cat/{catId}/edit(catId=${cat.id})}">Edit</a>
-            <a type="button" class="btn btn-default" th:href="@{cat/{catId}/delete(catId=${cat.id})}">Delete</a>
+            <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
+                <a type="button" class="btn btn-default" th:href="@{cat/{catId}/edit(catId=${cat.id})}">Edit</a>
+                <a type="button" class="btn btn-default" th:href="@{cat/{catId}/delete(catId=${cat.id})}">Delete</a>
+            </div>
         </div>
 
         <div class="col-md-4">

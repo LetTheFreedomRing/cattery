@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title th:text="${breed.name}">Breed</title>
@@ -15,7 +16,9 @@
           <div class="container">
               <div class="row">
                   <h2 class="card-title" th:text="${breed.name}">Breed name</h2>
-                  <a type="button" class="btn btn-default" th:href="@{/breed/{breedId}/edit(breedId=${breed.id})}">Edit</a>
+                  <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
+                    <a type="button" class="btn btn-default" th:href="@{/breed/{breedId}/edit(breedId=${breed.id})}">Edit</a>
+                  </div>
               </div>
               <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/breed/' + ${breed.id} + '/breedimage'}" width="400" height="300">
               <p th:text="${breed.overview}"> The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair </p>
@@ -62,8 +65,10 @@
               <a type="button" class="btn btn-default" th:href="@{/cat/{id}(id=${cat.id})}">Details</a>
               <button type="button" class="btn btn-default">Buy</button>
               <button type="button" class="btn btn-default">Add to wishlist</button>
-              <a type="button" class="btn btn-default" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
-              <a type="button" class="btn btn-default" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>
+              <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
+                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
+                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>
+              </div>
 
               <hr>
           </th:block>
