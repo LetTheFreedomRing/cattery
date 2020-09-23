@@ -1,5 +1,6 @@
 package com.example.cattery.controller;
 
+import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.service.BreedService;
@@ -74,13 +75,13 @@ class BreedControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/breed/create"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("breed/new"))
-                .andExpect(MockMvcResultMatchers.model().attribute("breed", new Breed()));
+                .andExpect(MockMvcResultMatchers.model().attribute("breed", new BreedDTO()));
     }
 
     @Test
     void updateBreedPage() throws Exception {
         // given
-        Mockito.when(breedService.getById(ArgumentMatchers.anyLong())).thenReturn(new Breed());
+        Mockito.when(breedService.getDTOById(ArgumentMatchers.anyLong())).thenReturn(new BreedDTO());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/breed/{breedId}/edit", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())

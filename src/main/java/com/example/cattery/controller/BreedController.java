@@ -1,6 +1,7 @@
 package com.example.cattery.controller;
 
 import com.example.cattery.Utils;
+import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.model.Breed;
 import com.example.cattery.service.BreedService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,29 +32,30 @@ public class BreedController {
 
     @GetMapping("/create")
     public String createBreedPage(Model model) {
-        return createOrUpdate(new Breed(), model);
+        return createOrUpdate(new BreedDTO(), model);
     }
 
     @GetMapping("/{breedId}/edit")
     public String updateBreedPage(@PathVariable("breedId") Long breedId, Model model) {
-        return createOrUpdate(breedService.getById(breedId), model);
+        return createOrUpdate(breedService.getDTOById(breedId), model);
     }
 
-    private String createOrUpdate(Breed breed, Model model) {
-        model.addAttribute("breed", breed);
+    private String createOrUpdate(BreedDTO breedDTO, Model model) {
+        model.addAttribute("breed", breedDTO);
         return "breed/new";
     }
 
     @PostMapping("/")
-    public String createOrUpdate(@ModelAttribute("breed") Breed breed, @RequestParam("image_file") MultipartFile image, BindingResult result) {
+    public String createOrUpdate(@ModelAttribute("breed") BreedDTO breedDTO, @RequestParam("image_file") MultipartFile image, BindingResult result) {
+        // todo : handle validations
         if (!image.isEmpty()) {
             try {
-                breed.setImage(Utils.convert(image.getBytes()));
+                breedDTO.setImage(Utils.convert(image.getBytes()));
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
         }
-        Breed savedBreed = breedService.create(breed);
+        Breed savedBreed = breedService.create(breedDTO);
         return "redirect:/breed/" + savedBreed.getId();
     }
 

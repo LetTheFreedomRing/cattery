@@ -1,13 +1,14 @@
 package com.example.cattery.service;
 
+import com.example.cattery.converter.CatConverter;
+import com.example.cattery.converter.CatDTOConverter;
+import com.example.cattery.dto.CatDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.repository.CatRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class CatServiceImpl implements CatService {
@@ -16,16 +17,16 @@ public class CatServiceImpl implements CatService {
 
     private final CatImageService catImageService;
 
-    public CatServiceImpl(CatRepository catRepository, CatImageService catImageService) {
+    private final CatConverter catConverter;
+
+    private final CatDTOConverter catDTOConverter;
+
+    public CatServiceImpl(CatRepository catRepository, CatImageService catImageService,
+                          CatConverter catConverter, CatDTOConverter catDTOConverter) {
         this.catRepository = catRepository;
         this.catImageService = catImageService;
-    }
-
-    @Override
-    public Set<Cat> getAll() {
-        Set<Cat> cats = new HashSet<>();
-        catRepository.findAll().forEach(cats::add);
-        return cats;
+        this.catConverter = catConverter;
+        this.catDTOConverter = catDTOConverter;
     }
 
     @Override
@@ -34,8 +35,8 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public void delete(Cat cat) {
-        catRepository.delete(cat);
+    public CatDTO getDTOById(Long id) {
+        return catConverter.convert(catRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @Override
@@ -44,11 +45,12 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public Cat create(Cat cat) {
-        if (cat.getImages().size() == 0) {
+    public Cat create(CatDTO catDTO) {
+        if (catDTO.getImages().size() == 0) {
             Byte[] image = catImageService.getDefaultImageBytes();
-            cat.getImages().add(image);
+            catDTO.getImages().add(image);
         }
+        Cat cat = catDTOConverter.convert(catDTO);
         cat.setLastUpdated(LocalDate.now());
         return catRepository.save(cat);
     }

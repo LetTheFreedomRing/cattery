@@ -1,9 +1,13 @@
 package com.example.cattery.controller;
 
+import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.dto.CatDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.*;
 import com.example.cattery.service.BreedService;
 import com.example.cattery.service.CatService;
+import com.example.cattery.service.CommentService;
+import com.example.cattery.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -15,8 +19,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CatControllerTest {
 
@@ -36,6 +38,12 @@ class CatControllerTest {
     @Mock
     private BreedService breedService;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CommentService commentService;
+
     @InjectMocks
     private CatController catController;
 
@@ -44,7 +52,7 @@ class CatControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        catController = new CatController(catService, breedService);
+        catController = new CatController(catService, breedService, userService, commentService);
         mockMvc = MockMvcBuilders.standaloneSetup(catController).build();
     }
 
@@ -75,23 +83,22 @@ class CatControllerTest {
 
     @Test
     void createCatPage() throws Exception {
-        // todo : remove after creating Cat Command
-        Cat expectedCat = new Cat();
-        expectedCat.setBreed(new Breed());
         Mockito.when(breedService.getAll()).thenReturn(new HashSet<>());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cat/create"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("cat/new"))
-                .andExpect(MockMvcResultMatchers.model().attribute("cat", expectedCat))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("cat"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("breeds"));
     }
 
     @Test
     void updateCatPage() throws Exception {
         // given
+        CatDTO catDTO = new CatDTO();
+        catDTO.setBreed(new BreedDTO());
         Mockito.when(breedService.getAll()).thenReturn(new HashSet<>());
-        Mockito.when(catService.getById(ArgumentMatchers.anyLong())).thenReturn(new Cat());
+        Mockito.when(catService.getDTOById(ArgumentMatchers.anyLong())).thenReturn(catDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cat/{catId}/edit", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())

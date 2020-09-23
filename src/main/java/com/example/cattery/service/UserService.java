@@ -24,4 +24,6 @@ public interface UserService {
     VerificationToken getVerificationToken(String verificationToken);
 
     void deleteById(Long id);
+
+    UserDTO getDTOByEmail(String email);
 }

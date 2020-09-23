@@ -3,7 +3,6 @@ package com.example.cattery.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ public class Cat extends BaseEntity {
     private String ems;
     private Integer price;
     @Column(name="birth_date")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate birthDate;
     private CatStatus status;
     @Column(name="cat_class")

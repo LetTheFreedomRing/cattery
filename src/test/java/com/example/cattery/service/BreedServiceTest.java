@@ -1,5 +1,8 @@
 package com.example.cattery.service;
 
+import com.example.cattery.converter.BreedConverter;
+import com.example.cattery.converter.BreedDTOConverter;
+import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.repository.BreedRepository;
@@ -21,13 +24,19 @@ class BreedServiceTest {
     @Mock
     private BreedImageService breedImageService;
 
+    @Mock
+    private BreedConverter breedConverter;
+
+    @Mock
+    private BreedDTOConverter breedDTOConverter;
+
     @InjectMocks
     private BreedServiceImpl breedService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        breedService = new BreedServiceImpl(breedRepository, breedImageService);
+        breedService = new BreedServiceImpl(breedRepository, breedImageService, breedConverter, breedDTOConverter);
     }
 
     @Test
@@ -36,14 +45,13 @@ class BreedServiceTest {
         String breedName = "blabla";
         Breed breed = new Breed();
         breed.setName(breedName);
-        Mockito.when(breedRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Collections.singletonList(breed));
+        Mockito.when(breedRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Optional.of(breed));
 
         // when
-        Set<Breed> breeds = breedService.getByName(breedName);
+        Breed foundBreed = breedService.getByName(breedName);
 
         // then
-        assertEquals(1, breeds.size());
-        assertEquals(breed, breeds.iterator().next());
+        assertEquals(breed, foundBreed);
     }
 
     @Test
@@ -61,6 +69,22 @@ class BreedServiceTest {
     }
 
     @Test
+    void getAllDTOs() {
+        // given
+        Breed breed = new Breed();
+        BreedDTO breedDTO = new BreedDTO();
+        Mockito.when(breedRepository.findAll()).thenReturn(Collections.singletonList(breed));
+        Mockito.when(breedConverter.convert(ArgumentMatchers.any())).thenReturn(breedDTO);
+
+        // when
+        Set<BreedDTO> breeds = breedService.getAllDTOs();
+
+        // then
+        assertEquals(1, breeds.size());
+        assertEquals(breedDTO, breeds.iterator().next());
+    }
+
+    @Test
     void getById() {
         // given
         Breed breed = new Breed();
@@ -74,6 +98,21 @@ class BreedServiceTest {
     }
 
     @Test
+    void getDTOById() {
+        // given
+        Breed breed = new Breed();
+        BreedDTO breedDTO = new BreedDTO();
+        Mockito.when(breedRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(breed));
+        Mockito.when(breedConverter.convert(ArgumentMatchers.any())).thenReturn(breedDTO);
+
+        // when
+        BreedDTO foundBreed = breedService.getDTOById(1L);
+
+        // then
+        assertEquals(breedDTO, foundBreed);
+    }
+
+    @Test
     void getByIdThrowsException() {
         // given
         Mockito.when(breedRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
@@ -83,13 +122,22 @@ class BreedServiceTest {
     }
 
     @Test
+    void getByDTOIdThrowsException() {
+        // given
+        Mockito.when(breedRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(NotFoundException.class, () -> breedService.getDTOById(1L));
+    }
+
+    @Test
     void create() {
         // given
         Breed breed = new Breed();
         Mockito.when(breedRepository.save(ArgumentMatchers.any())).thenReturn(breed);
 
         // when
-        Breed savedBreed = breedService.create(new Breed());
+        Breed savedBreed = breedService.create(new BreedDTO());
 
         // then
         assertEquals(breed, savedBreed);

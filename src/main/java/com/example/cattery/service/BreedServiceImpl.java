@@ -1,5 +1,8 @@
 package com.example.cattery.service;
 
+import com.example.cattery.converter.BreedConverter;
+import com.example.cattery.converter.BreedDTOConverter;
+import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.repository.BreedRepository;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BreedServiceImpl implements BreedService {
@@ -15,14 +19,21 @@ public class BreedServiceImpl implements BreedService {
 
     private final BreedImageService breedImageService;
 
-    public BreedServiceImpl(BreedRepository breedRepository, BreedImageService breedImageService) {
+    private final BreedConverter breedConverter;
+
+    private final BreedDTOConverter breedDTOConverter;
+
+    public BreedServiceImpl(BreedRepository breedRepository, BreedImageService breedImageService,
+                            BreedConverter breedConverter, BreedDTOConverter breedDTOConverter) {
         this.breedRepository = breedRepository;
         this.breedImageService = breedImageService;
+        this.breedConverter = breedConverter;
+        this.breedDTOConverter = breedDTOConverter;
     }
 
     @Override
-    public Set<Breed> getByName(String name) {
-        return new HashSet<>(breedRepository.findByName(name));
+    public Breed getByName(String name) {
+        return breedRepository.findByName(name).orElseThrow(() -> new NotFoundException("Breed with name : " + name + " not found"));
     }
 
     @Override
@@ -33,13 +44,18 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
+    public Set<BreedDTO> getAllDTOs() {
+        return getAll().stream().map(breedConverter::convert).collect(Collectors.toSet());
+    }
+
+    @Override
     public Breed getById(Long id) {
         return breedRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public void delete(Breed breed) {
-        breedRepository.delete(breed);
+    public BreedDTO getDTOById(Long id) {
+        return breedConverter.convert(getById(id));
     }
 
     @Override
@@ -48,11 +64,11 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
-    public Breed create(Breed breed) {
+    public Breed create(BreedDTO breedDTO) {
         // todo : check name for uniqueness
-        if (breed.getImage() == null) {
-            breed.setImage(breedImageService.getDefaultImageBytes());
+        if (breedDTO.getImage() == null) {
+            breedDTO.setImage(breedImageService.getDefaultImageBytes());
         }
-        return breedRepository.save(breed);
+        return breedRepository.save(breedDTOConverter.convert(breedDTO));
     }
 }

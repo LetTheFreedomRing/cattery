@@ -1,6 +1,7 @@
 package com.example.cattery.service;
 
-import com.example.cattery.exceptions.NotFoundException;
+import com.example.cattery.converter.CommentDTOConverter;
+import com.example.cattery.dto.CommentDTO;
 import com.example.cattery.model.Comment;
 import com.example.cattery.repository.CommentRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,11 @@ import java.util.Set;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentDTOConverter commentDTOConverter;
 
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, CommentDTOConverter commentDTOConverter) {
         this.commentRepository = commentRepository;
+        this.commentDTOConverter = commentDTOConverter;
     }
 
     @Override
@@ -28,29 +31,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Set<Comment> getAll() {
-        Set<Comment> comments = new HashSet<>();
-        commentRepository.findAll().forEach(comments::add);
-        return comments;
-    }
-
-    @Override
-    public Comment getById(Long id) {
-        return commentRepository.findById(id).orElseThrow(NotFoundException::new);
-    }
-
-    @Override
-    public void delete(Comment comment) {
-        commentRepository.delete(comment);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        commentRepository.deleteById(id);
-    }
-
-    @Override
-    public Comment create(Comment comment) {
-        return commentRepository.save(comment);
+    public Comment create(CommentDTO commentDTO) {
+        return commentRepository.save(commentDTOConverter.convert(commentDTO));
     }
 }

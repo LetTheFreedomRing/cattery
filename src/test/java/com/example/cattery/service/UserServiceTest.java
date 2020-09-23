@@ -1,5 +1,7 @@
 package com.example.cattery.service;
 
+import com.example.cattery.converter.UserConverter;
+import com.example.cattery.converter.UserDTOConverter;
 import com.example.cattery.dto.UserDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
@@ -35,13 +37,19 @@ class UserServiceTest {
     @Mock
     private RoleRepository roleRepository;
 
+    @Mock
+    private UserConverter userConverter;
+
+    @Mock
+    private UserDTOConverter userDTOConverter;
+
     @InjectMocks
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository, tokenRepository, roleRepository, passwordEncoder);
+        userService = new UserServiceImpl(userRepository, tokenRepository, roleRepository, passwordEncoder, userConverter, userDTOConverter);
     }
 
     @Test
@@ -81,12 +89,37 @@ class UserServiceTest {
     }
 
     @Test
+    void getDTOByEmail() {
+        // given
+        User user = new User();
+        UserDTO userDTO = new UserDTO();
+        Mockito.when(userRepository.findByEmail(ArgumentMatchers.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(userConverter.convert(ArgumentMatchers.any())).thenReturn(userDTO);
+
+        // when
+        UserDTO foundUser = userService.getDTOByEmail("email");
+
+        // then
+        assertEquals(userDTO, foundUser);
+    }
+
+    @Test
+    void getDTOByEmailThrowsException() {
+        // given
+        Mockito.when(userRepository.findByEmail(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(NotFoundException.class, () -> userService.getDTOByEmail("email"));
+    }
+
+    @Test
     void create() {
         // given
         User user = new User();
         Role role = new Role();
         Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(user);
         Mockito.when(roleRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Optional.of(role));
+        Mockito.when(userDTOConverter.convert(ArgumentMatchers.any())).thenReturn(user);
 
         // when
         User savedUser = userService.registerNewAccount(new UserDTO());
@@ -103,6 +136,7 @@ class UserServiceTest {
         Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(user);
         Mockito.when(userRepository.findByEmail(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
         Mockito.when(roleRepository.findByName(ArgumentMatchers.anyString())).thenReturn(Optional.of(role));
+        Mockito.when(userDTOConverter.convert(ArgumentMatchers.any())).thenReturn(user);
 
         // when
         final UserDTO userDTO = new UserDTO();

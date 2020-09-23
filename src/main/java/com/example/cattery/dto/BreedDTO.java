@@ -1,31 +1,37 @@
 package com.example.cattery.dto;
 
-import com.example.cattery.validator.PasswordMatches;
-import com.example.cattery.validator.ValidEmail;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-@PasswordMatches
-public class UserDTO {
+public class BreedDTO {
     private Long id;
-    @NotEmpty
+
     @NotNull
+    @NotEmpty
     private String name;
-    @NotEmpty
+
     @NotNull
-    @ValidEmail
-    private String email;
     @NotEmpty
+    private String overview;
+
     @NotNull
-    private String password;
-    private String matchingPassword;
+    @NotEmpty
+    private String history;
+
+    @NotNull
+    @NotEmpty
+    private String temper;
+
+    @NotNull
+    @NotEmpty
+    private String care;
+
+    private Byte[] image;
 }

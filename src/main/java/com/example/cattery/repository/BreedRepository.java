@@ -3,9 +3,9 @@ package com.example.cattery.repository;
 import com.example.cattery.model.Breed;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Collection;
+import java.util.Optional;
 
 public interface BreedRepository extends CrudRepository<Breed, Long> {
 
-    Collection<Breed> findByName(String name);
+    Optional<Breed> findByName(String name);
 }

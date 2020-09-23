@@ -124,8 +124,32 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <h4 class="text-center"> Comments </h4>
+        <div class="col-md-4 text-center">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <h3 class="reviews">Comments</h3>
+                </div>
+                <div th:each="comment : ${cat.comments}" class="album bg-light">
+                    <p class="float-right px-3" th:text="${comment.date}">22.04.2019</p>
+                    <div class="col text-left">
+                        <a th:href="@{/user/{id}(id=${comment.user.id})}" class="stretched-link text-reset font-weight-bold" th:text="${comment.user.name}">Username </a>
+                        <p th:text="${comment.message}">Great snippet! Thanks for sharing.</p>
+                    </div>
+                </div>
+                <div class="tab-pane">
+                    <form th:object="${comment}" th:action="@{/cat/{id}/comment(id=${cat.id})}" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <textarea class="form-control" id="commentFormControlTextarea" th:field="*{message}" rows="5"></textarea>
+                        </div>
+                        <div sec:authorize="isAuthenticated()">
+                            <button class="btn btn-secondary btn-circle float-right" type="submit">Comment</button>
+                        </div>
+                        <div sec:authorize="isAnonymous()">
+                            <a class="btn btn-secondary btn-circle float-right" th:href="@{/user/login}" type="button">Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
       </div>
     </div>

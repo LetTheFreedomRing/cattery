@@ -1,5 +1,7 @@
 package com.example.cattery.service;
 
+import com.example.cattery.converter.UserConverter;
+import com.example.cattery.converter.UserDTOConverter;
 import com.example.cattery.dto.UserDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
@@ -27,11 +29,19 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, VerificationTokenRepository tokenRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    private final UserConverter userConverter;
+
+    private final UserDTOConverter userDTOConverter;
+
+    public UserServiceImpl(UserRepository userRepository, VerificationTokenRepository tokenRepository,
+                           RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+                           UserConverter userConverter, UserDTOConverter userDTOConverter) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userConverter = userConverter;
+        this.userDTOConverter = userDTOConverter;
     }
 
     @Override
@@ -50,16 +60,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getDTOByEmail(String email) {
+        return userConverter.convert(userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User with email : " + email + " not found")));
+    }
+
+    @Override
     @Transactional
     public User registerNewAccount(UserDTO userDTO) throws UserAlreadyExistException {
         if (emailExist(userDTO.getEmail())) {
             throw new UserAlreadyExistException(
                     "There is an account with that email address: " +  userDTO.getEmail());
         }
-        final User user = new User();
-        user.setName(userDTO.getName());
+        final User user = userDTOConverter.convert(userDTO);
+        // encrypt password and set USER role
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
         user.setRoles(Collections.singleton(roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("Role not found"))));
         return userRepository.save(user);
     }

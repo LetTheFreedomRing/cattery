@@ -34,9 +34,9 @@
                                     <label>Breed:</label>
                                 </div>
                                 <div class="col-md-6 form-group">
-                                    <select class="form-control" th:field="*{breed.name}">
+                                    <select class="form-control" th:field="*{breed.id}">
                                         <option value="">Choose from existing</option>
-                                        <option th:each="breedOpt : ${breeds}" th:value="${breedOpt.name}" th:text="${breedOpt.name}"></option>
+                                        <option th:each="breed : ${breeds}" th:value="${breed.id}" th:text="${breed.name}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group">
