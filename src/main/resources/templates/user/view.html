@@ -1,59 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <title th:text="${user.name}">User</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
-<div class="tab-pane" id="account-settings">
-    <form action="#" method="post" class="form-horizontal" id="accountSetForm" role="form">
-        <div class="form-group">
-            <label for="avatar" class="col-sm-2 control-label">Avatar</label>
-            <div class="col-sm-10">
-                <div class="custom-input-file">
-                    <label class="uploadPhoto">
-                        Edit
-                        <input type="file" class="change-avatar" name="avatar" id="avatar">
-                    </label>
+<div th:replace="fragments/header :: header"></div>
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h5 th:text="${user.name}">
+                    Username
+                </h5>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <a th:type="button" th:href="@{/user/changePasswordAuthorized}" class="btn btn-default">Change password</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${user.name}">Username</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Email</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${user.email}">usermail@mail.com</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Role</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row container-fluid">
+                                <p class="mr-2" th:each="role : ${user.roles}" th:text="${role.name}">USER</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Registration date</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${user.registrationDate}">12.12.12</p>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="mycats-tab" data-toggle="tab" href="#mycats" role="tab" aria-controls="mycats" aria-selected="true">My cats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="wishlist-tab" data-toggle="tab" href="#wishlist" role="tab" aria-controls="wishlist" aria-selected="false">Wishlist</a>
+                    </li>
+                </ul>
+                <div class="tab-pane fade show active" id="mycats" role="tabpanel" aria-labelledby="mycats-tab">
+                    <th:block th:each="cat : ${user.cats}">
+                        <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/cat/' + ${cat.id} + '/catimage/0'}" width="400" height="300">
+                        <div class="row">
+                            <table class="table table-striped w-auto">
+                                <tr>
+                                    <td>Name: </td>
+                                    <td th:text="${cat.name}">Name</td>
+                                </tr>
+                                <tr>
+                                    <td>Class: </td>
+                                    <td th:text="${cat.catClass}">Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Gender: </td>
+                                    <td th:text="${cat.gender}">Gender</td>
+                                </tr>
+                                <tr>
+                                    <td>Colour: </td>
+                                    <td th:text="${cat.colour}">Colour</td>
+                                </tr>
+                                <tr>
+                                    <td>Price: </td>
+                                    <td th:text="${cat.price}">Price</td>
+                                </tr>
+                                <tr>
+                                    <td>Status: </td>
+                                    <td th:text="${cat.status}">Status</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                    </th:block>
+                </div>
+                <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+                    <th:block th:each="cat : ${user.wishList}">
+                        <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/cat/' + ${cat.id} + '/catimage/0'}" width="400" height="300">
+                        <div class="row">
+                            <table class="table table-striped w-auto">
+                                <tr>
+                                    <td>Name: </td>
+                                    <td th:text="${cat.name}">Name</td>
+                                </tr>
+                                <tr>
+                                    <td>Class: </td>
+                                    <td th:text="${cat.catClass}">Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Gender: </td>
+                                    <td th:text="${cat.gender}">Gender</td>
+                                </tr>
+                                <tr>
+                                    <td>Colour: </td>
+                                    <td th:text="${cat.colour}">Colour</td>
+                                </tr>
+                                <tr>
+                                    <td>Price: </td>
+                                    <td th:text="${cat.price}">Price</td>
+                                </tr>
+                                <tr>
+                                    <td>Status: </td>
+                                    <td th:text="${cat.status}">Status</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                    </th:block>
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="name" id="name" placeholder="Vilma palma">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="nickName" class="col-sm-2 control-label">Nick name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="nickName" id="nickName" placeholder="Vilma">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="email" class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" id="email" placeholder="vilma@mail.com">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="newPassword" class="col-sm-2 control-label">New password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" name="newPassword" id="newPassword">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword" class="col-sm-2 control-label">Confirm password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-primary btn-circle text-uppercase" type="submit" id="submit">Save changes</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
+
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- JavaScript library -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
 </body>
 </html>

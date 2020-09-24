@@ -92,6 +92,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         user1.setRegistrationDate(LocalDate.now());
         user1.setEmail("user1@somemail.com");
         user1.getRoles().add(adminRole);
+        user1.getRoles().add(userRole);
         user1.setEnabled(true);
         user1.setPassword(passwordEncoder.encode("password1"));
 
@@ -133,6 +134,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cat2.setPrice(330);
         cat2.getImages().add(catImageService.getDefaultImageBytes());
         user2.getCats().add(cat2);
+        user2.getWishList().add(cat1);
 
         // create comments
         Comment comment = new Comment();

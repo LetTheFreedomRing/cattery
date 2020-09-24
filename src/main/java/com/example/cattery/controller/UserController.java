@@ -15,6 +15,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +47,18 @@ public class UserController {
         this.securityService = securityService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.mailSender = mailSender;
+    }
+
+    @GetMapping("/view")
+    public String getUserPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // check if authorized
+        if ((authentication instanceof AnonymousAuthenticationToken)) {
+            // todo : handle better
+            throw new RuntimeException("Not authorized");
+        }
+        model.addAttribute("user", userService.getByEmail(authentication.getName()));
+        return "user/view";
     }
 
     @GetMapping("/register")
