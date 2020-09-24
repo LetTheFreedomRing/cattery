@@ -29,6 +29,8 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/user/*/delete", "/user/*/edit",

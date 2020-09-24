@@ -6,11 +6,13 @@ import com.example.cattery.exceptions.UserAlreadyExistException;
 import com.example.cattery.model.User;
 import com.example.cattery.model.VerificationToken;
 import com.example.cattery.registration.OnRegistrationCompleteEvent;
+import com.example.cattery.security.UserSecurityService;
 import com.example.cattery.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -26,7 +28,13 @@ class UserControllerTest {
     private UserService userService;
 
     @Mock
+    private UserSecurityService securityService;
+
+    @Mock
     private ApplicationEventPublisher eventPublisher;
+
+    @Mock
+    private JavaMailSender mailSender;
 
     @InjectMocks
     private UserController userController;
@@ -36,7 +44,7 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userService, eventPublisher);
+        userController = new UserController(userService, securityService, eventPublisher, mailSender);
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 

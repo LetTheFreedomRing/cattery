@@ -60,8 +60,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User with email : " + email + " not found"));
+    }
+
+    @Override
     public UserDTO getDTOByEmail(String email) {
-        return userConverter.convert(userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User with email : " + email + " not found")));
+        return userConverter.convert(getByEmail(email));
+    }
+
+    @Override
+    public void changePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
     @Override

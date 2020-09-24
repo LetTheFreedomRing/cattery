@@ -1,23 +1,29 @@
 package com.example.cattery.controller;
 
+import com.example.cattery.dto.PasswordDTO;
 import com.example.cattery.dto.UserDTO;
 import com.example.cattery.exceptions.NotFoundException;
+import com.example.cattery.exceptions.TokenExpiredException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
 import com.example.cattery.model.User;
 import com.example.cattery.model.VerificationToken;
 import com.example.cattery.registration.OnRegistrationCompleteEvent;
+import com.example.cattery.security.UserSecurityService;
 import com.example.cattery.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Calendar;
+import java.util.UUID;
 
 @Controller
 @Slf4j
@@ -26,11 +32,18 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserSecurityService securityService;
+
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public UserController(UserService userService, ApplicationEventPublisher applicationEventPublisher) {
+    private final JavaMailSender mailSender;
+
+    public UserController(UserService userService, UserSecurityService securityService,
+                          ApplicationEventPublisher applicationEventPublisher, JavaMailSender mailSender) {
         this.userService = userService;
+        this.securityService = securityService;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.mailSender = mailSender;
     }
 
     @GetMapping("/register")
@@ -42,6 +55,28 @@ public class UserController {
     @GetMapping("/login")
     public String getLoginPage(Model model) {
         return "user/login";
+    }
+
+    @GetMapping("/changePassword")
+    public String getChangePasswordPage(@RequestParam("token") String token, Model model) {
+        try {
+            securityService.validatePasswordResetToken(token);
+        } catch (NotFoundException nfe) {
+            model.addAttribute("error", "Invalid token");
+            return "redirect:/user/login";
+        } catch (TokenExpiredException tee) {
+            model.addAttribute("error", "Token expired");
+            return "redirect:/user/login";
+        }
+        PasswordDTO passwordDTO = new PasswordDTO();
+        passwordDTO.setToken(token);
+        model.addAttribute("password", passwordDTO);
+        return "user/updatePassword";
+    }
+
+    @GetMapping("/forgotPassword")
+    public String getForgotPasswordPage() {
+        return "user/forgotPassword";
     }
 
     @PostMapping("/")
@@ -88,8 +123,61 @@ public class UserController {
             userService.saveRegisteredUser(user);
             return "redirect:/user/login";
         } catch (NotFoundException ex) {
+            log.debug("Verification token not found", ex);
             model.addAttribute("message", "Invalid token.");
             return "redirect:/user/bad";
         }
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(HttpServletRequest request, @RequestParam("email") String email) {
+        final User user = userService.getByEmail(email);
+
+        final String token = UUID.randomUUID().toString();
+        securityService.createPasswordResetToken(user, token);
+        try {
+            final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+            final SimpleMailMessage mail = constructResetTokenEmail(appUrl, token, user);
+            mailSender.send(mail);
+        } catch (final MailAuthenticationException e) {
+            log.debug("MailAuthenticationException", e);
+            return "errors/emailError";
+        } catch (final Exception e) {
+            log.debug(e.getLocalizedMessage(), e);
+            return "redirect:/user/login";
+        }
+        return "redirect:/user/login";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@Valid PasswordDTO passwordDTO, Model model) {
+        try {
+            securityService.validatePasswordResetToken(passwordDTO.getToken());
+            User user = securityService.getUserByPasswordResetToken(passwordDTO.getToken());
+            userService.changePassword(user, passwordDTO.getNewPassword());
+            return "redirect:/user/login";
+        } catch (NotFoundException nfe) {
+            log.debug("Password reset token token not found", nfe);
+            model.addAttribute("error", "Invalid token");
+            return "redirect:/user/changePassword";
+        } catch (TokenExpiredException tee) {
+            log.debug("Token expired", tee);
+            model.addAttribute("error", "Token expired");
+            return "redirect:/user/changePassword";
+        }
+    }
+
+    private SimpleMailMessage constructResetTokenEmail(String appUrl, String token, User user) {
+        String url = appUrl + "/user/changePassword?token=" + token;
+        return constructEmail("Reset Password", "Please follow this url to reset your password" + " \r\n" + url, user);
+    }
+
+    private SimpleMailMessage constructEmail(String subject, String body,
+                                             User user) {
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setSubject(subject);
+        email.setText(body);
+        email.setTo(user.getEmail());
+        return email;
     }
 }
