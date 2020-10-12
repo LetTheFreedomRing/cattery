@@ -46,6 +46,7 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/user/logout")
                 .invalidateHttpSession(false)
                 .logoutSuccessUrl("/")
                 .permitAll()
