@@ -3,14 +3,16 @@ package com.example.cattery.controller;
 import com.example.cattery.Utils;
 import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.dto.CatDTO;
+import com.example.cattery.dto.ChargeRequestDTO;
 import com.example.cattery.dto.CommentDTO;
 import com.example.cattery.model.Cat;
-import com.example.cattery.service.BreedService;
-import com.example.cattery.service.CatService;
-import com.example.cattery.service.CommentService;
-import com.example.cattery.service.UserService;
+import com.example.cattery.model.CatStatus;
+import com.example.cattery.service.*;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,16 +30,22 @@ import java.time.LocalDate;
 @RequestMapping("cat")
 public class CatController {
 
+    @Value("${STRIPE_PUBLIC_KEY}")
+    private String stripePublicKey;
+
     private final CatService catService;
     private final BreedService breedService;
     private final UserService userService;
     private final CommentService commentService;
+    private final StripeService paymentsService;
 
-    public CatController(CatService catService, BreedService breedService, UserService userService, CommentService commentService) {
+    public CatController(CatService catService, BreedService breedService, UserService userService,
+                         CommentService commentService, StripeService paymentsService) {
         this.catService = catService;
         this.breedService = breedService;
         this.userService = userService;
         this.commentService = commentService;
+        this.paymentsService = paymentsService;
     }
 
     @GetMapping("/{catId}")
@@ -99,5 +107,44 @@ public class CatController {
     public String delete(@PathVariable("catId") Long catId) {
         catService.deleteById(catId);
         return "redirect:/";
+    }
+
+    @GetMapping("/{catId}/buy")
+    public String buyCat(@PathVariable(name = "catId") Long catId, Model model) {
+        Cat cat = catService.getById(catId);
+        if (!cat.getStatus().equals(CatStatus.AVAILABLE)) {
+            // todo : create exception
+            throw new RuntimeException("Unfortunately, this cat is not available for sale for now");
+        }
+        model.addAttribute("cat", cat);
+        model.addAttribute("stripePublicKey", stripePublicKey);
+        model.addAttribute("currency", ChargeRequestDTO.Currency.USD);
+        return "cat/buy";
+    }
+
+    @PostMapping("/{catId}/buy")
+    @PreAuthorize("hasPrivilege('READ_PRIVILEGE') " +
+            "|| hasPrivilege('WRITE_PRIVILEGE')")
+    public String buyCat(ChargeRequestDTO chargeRequest, @PathVariable(name = "catId") Long catId, Model model) throws StripeException {
+        chargeRequest.setDescription("Example charge");
+        chargeRequest.setAmount(chargeRequest.getAmount() * 100);
+        chargeRequest.setCurrency(ChargeRequestDTO.Currency.USD);
+        Charge charge = paymentsService.charge(chargeRequest);
+
+        // successful payment, so update user and cat
+        catService.updateOwner(userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()),
+                catService.getById(catId));
+
+        model.addAttribute("id", charge.getId());
+        model.addAttribute("status", charge.getStatus());
+        model.addAttribute("chargeId", charge.getId());
+        model.addAttribute("balance_transaction", charge.getBalanceTransaction());
+        return "cat/paymentResult";
+    }
+
+    @ExceptionHandler(StripeException.class)
+    public String handleError(Model model, StripeException ex) {
+        model.addAttribute("error", ex.getMessage());
+        return "cat/paymentResult";
     }
 }

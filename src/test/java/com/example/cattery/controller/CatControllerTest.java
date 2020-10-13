@@ -4,10 +4,7 @@ import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.dto.CatDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.*;
-import com.example.cattery.service.BreedService;
-import com.example.cattery.service.CatService;
-import com.example.cattery.service.CommentService;
-import com.example.cattery.service.UserService;
+import com.example.cattery.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -44,6 +41,9 @@ class CatControllerTest {
     @Mock
     private CommentService commentService;
 
+    @Mock
+    private StripeService stripeService;
+
     @InjectMocks
     private CatController catController;
 
@@ -52,7 +52,7 @@ class CatControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        catController = new CatController(catService, breedService, userService, commentService);
+        catController = new CatController(catService, breedService, userService, commentService, stripeService);
         mockMvc = MockMvcBuilders.standaloneSetup(catController).build();
     }
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Buy Cat</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="tab-content">
+                <div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.name}">Cat Name</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Breed</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.breed}">Cat Breed</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Gender</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.gender}">Gender</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Colour</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.colour}">Colour</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>EMS</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.ems}">EMS</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Birth Date</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.birthDate}">12.12.12</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Class</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${cat.catClass}">Cat class</p>
+                        </div>
+                    </div>
+                    <form th:action='@{/cat/{catId}/buy(catId=${cat.id})}' method='POST' id='checkout-form'>
+                        <input type='hidden' th:value='${cat.price}' name='amount' />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Price</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <p th:text="${cat.price}">100</p>
+                                    <p th:text="' ' + ${currency}">USD</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <script
+                                src='https://checkout.stripe.com/checkout.js'
+                                class='stripe-button'
+                                th:attr='data-key=${stripePublicKey},
+                                    data-amount=${cat.price * 100},
+                                    data-currency=${currency}'
+                                data-name='Cattery'
+                                data-description='Cat payment'
+                                data-image
+                                        ='https://bit.ly/fcc-relaxing-cat'
+                                data-locale='auto'
+                                data-zip-code='false'>
+                            Stripe.setPublishableKey('pk_test_51HbnPpIE20z9PxPvlWtJ9FDJRIVDc57X8rtslYAM2EIEPg4PrJzPaZoeL1YcEayQfvg5yx47NE2b31DbirWtICLm00ks5UGe7S');
+                        </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- JavaScript library -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

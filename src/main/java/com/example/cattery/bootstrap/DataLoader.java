@@ -110,7 +110,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cat1.setBreed(british);
         cat1.setCatClass(CatClass.BREEDING);
         british.getCats().add(cat1);
-        cat1.setStatus(CatStatus.SOLD);
+        cat1.setStatus(CatStatus.AVAILABLE);
         cat1.setColour("black golden spotted");
         cat1.setEms("BRI ny 24");
         cat1.setGender(Gender.MALE);

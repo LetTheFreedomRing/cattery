@@ -116,7 +116,7 @@
                 <td th:text="${cat.lastUpdated}">Last updated</td>
             </tr>
         </table>
-            <button type="button" class="btn btn-default">Buy</button>
+            <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default">Buy</a>
             <button type="button" class="btn btn-default">Add to wishlist</button>
             <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
                 <a type="button" class="btn btn-default" th:href="@{cat/{catId}/edit(catId=${cat.id})}">Edit</a>

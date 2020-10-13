@@ -5,6 +5,8 @@ import com.example.cattery.converter.CatDTOConverter;
 import com.example.cattery.dto.CatDTO;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
+import com.example.cattery.model.CatStatus;
+import com.example.cattery.model.User;
 import com.example.cattery.repository.CatRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,14 @@ public class CatServiceImpl implements CatService {
     @Override
     public void deleteById(Long id) {
         catRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateOwner(User user, Cat cat) {
+        user.getCats().add(cat);
+        cat.setOwner(user);
+        cat.setStatus(CatStatus.SOLD);
+        catRepository.save(cat);
     }
 
     @Override
