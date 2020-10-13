@@ -30,4 +30,6 @@ public interface UserService {
     UserDTO getDTOByEmail(String email);
 
     void changePassword(User user, String password);
+
+    boolean checkIfValidOldPassword(User user, String oldPassword);
 }

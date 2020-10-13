@@ -149,4 +149,11 @@ class UserControllerTest {
         assertFalse(token.getUser().isEnabled());
         Mockito.verify(userService, Mockito.times(0)).saveRegisteredUser(ArgumentMatchers.any());
     }
+
+    @Test
+    void getUpdatePasswordPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/updatePassword"))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.view().name("user/updatePassword"));
+    }
 }

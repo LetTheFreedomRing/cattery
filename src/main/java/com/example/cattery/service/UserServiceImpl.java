@@ -76,6 +76,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean checkIfValidOldPassword(User user, String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Override
     @Transactional
     public User registerNewAccount(UserDTO userDTO) throws UserAlreadyExistException {
         if (emailExist(userDTO.getEmail())) {

@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,12 +87,17 @@ public class UserController {
         PasswordDTO passwordDTO = new PasswordDTO();
         passwordDTO.setToken(token);
         model.addAttribute("password", passwordDTO);
-        return "user/updatePassword";
+        return "user/resetPassword";
     }
 
     @GetMapping("/forgotPassword")
     public String getForgotPasswordPage() {
         return "user/forgotPassword";
+    }
+
+    @GetMapping("/updatePassword")
+    public String getUpdatePasswordPage() {
+        return "user/updatePassword";
     }
 
     @PostMapping("/")
@@ -162,6 +168,34 @@ public class UserController {
             return "redirect:/user/login";
         }
         return "redirect:/user/login";
+    }
+
+    @PostMapping("/updatePassword")
+    @PreAuthorize("hasPrivilege('READ_PRIVILEGE') " +
+            "|| hasPrivilege('WRITE_PRIVILEGE')")
+    public String updatePassword(@RequestParam(name = "newPassword") String newPassword,
+                                 @RequestParam(name = "oldPassword") String oldPassword,
+                                 @RequestParam(name = "confirmPassword") String confirmPassword, Model model) {
+
+        try {
+            User user = userService.getByEmail(
+                    SecurityContextHolder.getContext().getAuthentication().getName());
+
+            if (!userService.checkIfValidOldPassword(user, oldPassword)) {
+                throw new RuntimeException("Invalid old password");
+            }
+
+            if (!(newPassword.equals(confirmPassword))) {
+                throw new RuntimeException("New and confirm passwords don't match");
+            }
+
+            userService.changePassword(user, newPassword);
+
+            return "redirect:/user/view";
+        } catch (NotFoundException nfe) {
+            System.out.println("No user found : " + SecurityContextHolder.getContext().getAuthentication().getName());
+            return "";
+        }
     }
 
     @PostMapping("/changePassword")
