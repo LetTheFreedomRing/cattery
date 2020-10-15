@@ -29,8 +29,8 @@ public abstract class ImageService {
 
         } catch (IOException e) {
             log.error("getDefaultImage() error : " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
     }
 
 }

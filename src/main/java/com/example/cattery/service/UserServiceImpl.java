@@ -96,12 +96,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String verificationToken) {
-        return tokenRepository.findByToken(verificationToken).orElseThrow(NotFoundException::new).getUser();
+        return getVerificationToken(verificationToken).getUser();
     }
 
     @Override
-    public VerificationToken getVerificationToken(String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken).orElseThrow(NotFoundException::new);
+    public VerificationToken getVerificationToken(String verificationToken) {
+        return tokenRepository.findByToken(verificationToken).orElseThrow(
+                () -> new NotFoundException("User with token : " + verificationToken + " not found"));
     }
 
     @Override

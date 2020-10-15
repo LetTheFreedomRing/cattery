@@ -5,6 +5,7 @@ import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.dto.CatDTO;
 import com.example.cattery.dto.ChargeRequestDTO;
 import com.example.cattery.dto.CommentDTO;
+import com.example.cattery.exceptions.CatNotAvailableForSaleException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.model.CatStatus;
 import com.example.cattery.service.*;
@@ -13,7 +14,6 @@ import com.stripe.model.Charge;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -89,13 +89,10 @@ public class CatController {
     }
 
     @PostMapping("/{catId}/comment")
+    @PreAuthorize("hasPrivilege('READ_PRIVILEGE') " +
+            "|| hasPrivilege('WRITE_PRIVILEGE')")
     public String comment(@PathVariable(name = "catId") Long catId, @ModelAttribute("commentDTO") CommentDTO commentDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // check if authorized
-        if ((authentication instanceof AnonymousAuthenticationToken)) {
-            // todo : handle better
-            throw new RuntimeException("Not authorized");
-        }
         commentDTO.setUser(userService.getDTOByEmail(authentication.getName()));
         commentDTO.setCat(catService.getDTOById(catId));
         commentDTO.setDate(LocalDate.now());
@@ -112,9 +109,10 @@ public class CatController {
     @GetMapping("/{catId}/buy")
     public String buyCat(@PathVariable(name = "catId") Long catId, Model model) {
         Cat cat = catService.getById(catId);
+
+        // check if cat is available for sale
         if (!cat.getStatus().equals(CatStatus.AVAILABLE)) {
-            // todo : create exception
-            throw new RuntimeException("Unfortunately, this cat is not available for sale for now");
+            throw new CatNotAvailableForSaleException();
         }
         model.addAttribute("cat", cat);
         model.addAttribute("stripePublicKey", stripePublicKey);
@@ -127,7 +125,7 @@ public class CatController {
             "|| hasPrivilege('WRITE_PRIVILEGE')")
     public String buyCat(ChargeRequestDTO chargeRequest, @PathVariable(name = "catId") Long catId, Model model) throws StripeException {
         chargeRequest.setDescription("Example charge");
-        chargeRequest.setAmount(chargeRequest.getAmount() * 100);
+        chargeRequest.setAmount(chargeRequest.getAmount() * 100); // stripe works with cents, so we multiply by 100 to obtain dollars
         chargeRequest.setCurrency(ChargeRequestDTO.Currency.USD);
         Charge charge = paymentsService.charge(chargeRequest);
 
@@ -139,12 +137,6 @@ public class CatController {
         model.addAttribute("status", charge.getStatus());
         model.addAttribute("chargeId", charge.getId());
         model.addAttribute("balance_transaction", charge.getBalanceTransaction());
-        return "cat/paymentResult";
-    }
-
-    @ExceptionHandler(StripeException.class)
-    public String handleError(Model model, StripeException ex) {
-        model.addAttribute("error", ex.getMessage());
         return "cat/paymentResult";
     }
 }

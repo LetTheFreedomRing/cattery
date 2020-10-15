@@ -80,6 +80,16 @@ class CatControllerTest {
         Mockito.verify(catService, Mockito.times(1)).getById(ArgumentMatchers.anyLong());
     }
 
+    @Test
+    void getCatPageBadRequest() throws Exception {
+        // given
+        Cat cat = new Cat();
+        Mockito.when(catService.getById(ArgumentMatchers.anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/cat/{catId}", "badrequest"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 
     @Test
     void createCatPage() throws Exception {

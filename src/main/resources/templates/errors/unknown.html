@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>404 Not Found Error</title>
+    <title>Unknown Error</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
@@ -16,7 +16,7 @@
                 <h1>
                     Oops!</h1>
                 <div class="error-details">
-                    <p th:text="${exception}">Sorry, an error has occurred, Requested page not found!</p>
+                    <p>Sorry, unknown error has occurred!</p>
                 </div>
                 <div class="error-actions">
                     <a href="/index" class="btn btn-secondary btn-lg"><span class="glyphicon glyphicon-home"></span>

@@ -1,5 +1,6 @@
 package com.example.cattery.service;
 
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.repository.CatRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class CatImageService extends ImageService {
         try {
             Optional<Cat> optionalCat = catRepository.findById(catId);
             if (!optionalCat.isPresent()) {
-                throw new RuntimeException("Cat with id " + catId + " not found");
+                throw new NotFoundException("Cat with id " + catId + " not found");
             }
             Cat cat = optionalCat.get();
 
@@ -39,9 +40,8 @@ public class CatImageService extends ImageService {
             cat.getImages().add(bytes);
             catRepository.save(cat);
         } catch (IOException e) {
-            //todo: handle better
             log.error("Error occurred", e);
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 

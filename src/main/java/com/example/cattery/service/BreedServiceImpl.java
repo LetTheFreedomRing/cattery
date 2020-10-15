@@ -33,7 +33,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public Breed getByName(String name) {
-        return breedRepository.findByName(name).orElseThrow(() -> new NotFoundException("Breed with name : " + name + " not found"));
+        return breedRepository.findByName(name).orElseThrow(
+                () -> new NotFoundException("Breed with name : " + name + " not found"));
     }
 
     @Override
@@ -50,7 +51,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public Breed getById(Long id) {
-        return breedRepository.findById(id).orElseThrow(NotFoundException::new);
+        return breedRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Breed with id : " + id + " not found"));
     }
 
     @Override

@@ -33,12 +33,13 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat getById(Long id) {
-        return catRepository.findById(id).orElseThrow(NotFoundException::new);
+        return catRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Cat with id : " + id + " not found"));
     }
 
     @Override
     public CatDTO getDTOById(Long id) {
-        return catConverter.convert(catRepository.findById(id).orElseThrow(NotFoundException::new));
+        return catConverter.convert(getById(id));
     }
 
     @Override

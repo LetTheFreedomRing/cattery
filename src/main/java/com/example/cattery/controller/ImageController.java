@@ -48,6 +48,7 @@ public class ImageController {
                 IOUtils.copy(is, response.getOutputStream());
             } catch (IOException ex) {
                 log.error("Error returning image", ex);
+                throw new RuntimeException(ex.getMessage());
             }
         }
     }
@@ -68,6 +69,7 @@ public class ImageController {
             IOUtils.copy(is, response.getOutputStream());
         } catch (IOException ex) {
             log.error("Error returning image", ex);
+            throw new RuntimeException(ex.getMessage());
         }
     }
 
