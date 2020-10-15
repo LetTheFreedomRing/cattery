@@ -3,6 +3,7 @@ package com.example.cattery.service;
 import com.example.cattery.converter.BreedConverter;
 import com.example.cattery.converter.BreedDTOConverter;
 import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.exceptions.BreedAlreadyExistException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.repository.BreedRepository;
@@ -66,11 +67,27 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
-    public Breed create(BreedDTO breedDTO) {
-        // todo : check name for uniqueness
-        if (breedDTO.getImage() == null) {
-            breedDTO.setImage(breedImageService.getDefaultImageBytes());
+    public Breed create(BreedDTO breedDTO) throws BreedAlreadyExistException {
+        if ((isNew(breedDTO) && breedExists(breedDTO.getName())) ||
+                (breedExists(breedDTO.getName()) && !isSameId(breedDTO, breedDTO.getName()))) {
+            throw new BreedAlreadyExistException();
+        } else {
+            if (breedDTO.getImage() == null) {
+                breedDTO.setImage(breedImageService.getDefaultImageBytes());
+            }
+            return breedRepository.save(breedDTOConverter.convert(breedDTO));
         }
-        return breedRepository.save(breedDTOConverter.convert(breedDTO));
+    }
+
+    private boolean breedExists(String name) {
+        return breedRepository.findByName(name).isPresent();
+    }
+
+    private boolean isNew(BreedDTO breedDTO) {
+        return breedDTO.getId() == null;
+    }
+
+    private boolean isSameId(BreedDTO breedDTO, String name) {
+        return breedRepository.findByName(name).orElseThrow(RuntimeException::new).getId().equals(breedDTO.getId());
     }
 }

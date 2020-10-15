@@ -2,17 +2,18 @@ package com.example.cattery.service;
 
 import com.example.cattery.converter.CatConverter;
 import com.example.cattery.converter.CatDTOConverter;
+import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.dto.CatDTO;
 import com.example.cattery.exceptions.NotFoundException;
+import com.example.cattery.model.Breed;
 import com.example.cattery.model.Cat;
+import com.example.cattery.repository.BreedRepository;
 import com.example.cattery.repository.CatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +22,9 @@ public class CatServiceTest {
 
     @Mock
     private CatRepository catRepository;
+
+    @Mock
+    private BreedRepository breedRepository;
 
     @Mock
     private CatImageService catImageService;
@@ -37,7 +41,7 @@ public class CatServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        catService = new CatServiceImpl(catRepository, catImageService, catConverter, catDTOConverter);
+        catService = new CatServiceImpl(catRepository, breedRepository, catImageService, catConverter, catDTOConverter);
     }
 
     @Test
@@ -91,11 +95,34 @@ public class CatServiceTest {
         cat.setId(1L);
         Mockito.when(catRepository.save(ArgumentMatchers.any())).thenReturn(cat);
         Mockito.when(catDTOConverter.convert(ArgumentMatchers.any())).thenReturn(cat);
+        Mockito.when(breedRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(new Breed()));
 
         // when
-        Cat savedCat = catService.create(new CatDTO());
+        CatDTO catDTO = new CatDTO();
+        BreedDTO breedDTO = new BreedDTO();
+        breedDTO.setId(1L);
+        catDTO.setBreed(breedDTO);
+        Cat savedCat = catService.create(catDTO);
 
         // then
         assertEquals(cat, savedCat);
+    }
+
+    @Test
+    void createNoBreedFound() {
+        // given
+        Cat cat = new Cat();
+        cat.setId(1L);
+        Mockito.when(catRepository.save(ArgumentMatchers.any())).thenReturn(cat);
+        Mockito.when(catDTOConverter.convert(ArgumentMatchers.any())).thenReturn(cat);
+        Mockito.when(breedRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
+
+        // when
+        CatDTO catDTO = new CatDTO();
+        BreedDTO breedDTO = new BreedDTO();
+        breedDTO.setId(1L);
+        catDTO.setBreed(breedDTO);
+
+        assertThrows(NotFoundException.class, () -> catService.create(catDTO));
     }
 }

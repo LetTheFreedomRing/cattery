@@ -118,7 +118,7 @@ class CatControllerTest {
     }
 
     @Test
-    void create() throws Exception {
+    void createValid() throws Exception {
         // given
         Cat cat = new Cat();
         cat.setId(CAT_ID);
@@ -139,6 +139,57 @@ class CatControllerTest {
                 .param("breed.name", ""))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/cat/" + CAT_ID));
+        Mockito.verify(catService, Mockito.times(1)).create(ArgumentMatchers.any());
+    }
+
+    @Test
+    void createNotValid() throws Exception {
+        // given
+        Cat cat = new Cat();
+        cat.setId(CAT_ID);
+        MockMultipartFile file = new MockMultipartFile("image_files", "testing.txt",
+                "text/plain", "Dummy".getBytes());
+        Mockito.when(catService.create(ArgumentMatchers.any())).thenReturn(cat);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .multipart("/cat/").file(file)
+                .param("name", CAT_NAME)
+                .param("gender", CAT_GENDER.name())
+                .param("colour", CAT_COLOUR)
+                .param("birthDate", CAT_BIRTH_DATE.toString())
+                .param("status", CAT_STATUS.name())
+                .param("catClass", CAT_CLASS.name())
+                .param("breed.name", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("cat", "ems"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("cat", "price"))
+                .andExpect(MockMvcResultMatchers.view().name("cat/new"));
+        Mockito.verify(catService, Mockito.times(0)).create(ArgumentMatchers.any());
+    }
+
+    @Test
+    void createNotValidBreed() throws Exception {
+        // given
+        Cat cat = new Cat();
+        cat.setId(CAT_ID);
+        MockMultipartFile file = new MockMultipartFile("image_files", "testing.txt",
+                "text/plain", "Dummy".getBytes());
+        Mockito.when(catService.create(ArgumentMatchers.any())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .multipart("/cat/").file(file)
+                .param("name", CAT_NAME)
+                .param("gender", CAT_GENDER.name())
+                .param("colour", CAT_COLOUR)
+                .param("ems", CAT_EMS)
+                .param("price", String.valueOf(CAT_PRICE))
+                .param("birthDate", CAT_BIRTH_DATE.toString())
+                .param("status", CAT_STATUS.name())
+                .param("catClass", CAT_CLASS.name())
+                .param("breed.name", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("cat", "breed"))
+                .andExpect(MockMvcResultMatchers.view().name("cat/new"));
         Mockito.verify(catService, Mockito.times(1)).create(ArgumentMatchers.any());
     }
 

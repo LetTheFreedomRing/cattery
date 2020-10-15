@@ -1,6 +1,7 @@
 package com.example.cattery.service;
 
 import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.exceptions.BreedAlreadyExistException;
 import com.example.cattery.model.Breed;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ public interface BreedService {
 
     BreedDTO getDTOById(Long id);
 
-    Breed create(BreedDTO breedDTO);
+    Breed create(BreedDTO breedDTO) throws BreedAlreadyExistException;
 
     Set<Breed> getAll();
 

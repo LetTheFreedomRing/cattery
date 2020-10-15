@@ -1,6 +1,7 @@
 package com.example.cattery.controller;
 
 import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.exceptions.BreedAlreadyExistException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.service.BreedService;
@@ -107,6 +108,48 @@ class BreedControllerTest {
                         .param("temper", BREED_TEMPER))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/breed/" + BREED_ID));
+        Mockito.verify(breedService, Mockito.times(1)).create(ArgumentMatchers.any());
+    }
+
+    @Test
+    void createNotValid() throws Exception {
+        // given
+        Breed breed = new Breed();
+        breed.setId(BREED_ID);
+        MockMultipartFile file = new MockMultipartFile("image_file", "testing.txt",
+                "text/plain", "Dummy".getBytes());
+        Mockito.when(breedService.create(ArgumentMatchers.any())).thenReturn(breed);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .multipart("/breed/").file(file)
+                .param("name", BREED_NAME)
+                .param("overview", BREED_OVERVIEW)
+                .param("temper", BREED_TEMPER))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("breed", "care"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("breed", "history"))
+                .andExpect(MockMvcResultMatchers.view().name("breed/new"));
+        Mockito.verify(breedService, Mockito.times(0)).create(ArgumentMatchers.any());
+    }
+
+    @Test
+    void createNameExists() throws Exception {
+        // given
+        Breed breed = new Breed();
+        breed.setId(BREED_ID);
+        MockMultipartFile file = new MockMultipartFile("image_file", "testing.txt",
+                "text/plain", "Dummy".getBytes());
+        Mockito.when(breedService.create(ArgumentMatchers.any())).thenThrow(BreedAlreadyExistException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .multipart("/breed/").file(file)
+                .param("name", BREED_NAME)
+                .param("overview", BREED_OVERVIEW)
+                .param("history", BREED_HISTORY)
+                .param("care", BREED_CARE)
+                .param("temper", BREED_TEMPER))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("breed/new"));
         Mockito.verify(breedService, Mockito.times(1)).create(ArgumentMatchers.any());
     }
 

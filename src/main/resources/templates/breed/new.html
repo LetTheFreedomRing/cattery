@@ -27,6 +27,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{name}"/>
+                                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -40,18 +41,22 @@
                                 <div class="form-group">
                                     <label for="overviewFormControlTextarea">Overview</label>
                                     <textarea class="form-control" id="overviewFormControlTextarea" rows="3" th:field="*{overview}"></textarea>
+                                    <p th:if="${#fields.hasErrors('overview')}" th:errors="*{overview}">Error</p>
                                 </div>
                             <div class="form-group">
                                 <label for="historyFormControlTextarea">History</label>
                                 <textarea class="form-control" id="historyFormControlTextarea" rows="3" th:field="*{history}"></textarea>
+                                <p th:if="${#fields.hasErrors('history')}" th:errors="*{history}">Error</p>
                             </div>
                             <div class="form-group">
                                 <label for="careFormControlTextarea">Care</label>
                                 <textarea class="form-control" id="careFormControlTextarea" rows="3" th:field="*{care}"></textarea>
+                                <p th:if="${#fields.hasErrors('care')}" th:errors="*{care}">Error</p>
                             </div>
                             <div class="form-group">
                                 <label for="temperFormControlTextarea">Temper</label>
                                 <textarea class="form-control" id="temperFormControlTextarea" rows="3" th:field="*{temper}"></textarea>
+                                <p th:if="${#fields.hasErrors('temper')}" th:errors="*{temper}">Error</p>
                             </div>
                             <button type="submit" class="btn btn-secondary">Submit</button>
                         </div>

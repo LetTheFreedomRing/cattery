@@ -27,6 +27,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{name}"/>
+                                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -38,6 +39,7 @@
                                         <option value="">Choose from existing</option>
                                         <option th:each="breed : ${breeds}" th:value="${breed.id}" th:text="${breed.name}"></option>
                                     </select>
+                                    <p th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}">Error</p>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <a class="btn btn-secondary" th:href="@{/breed/create}" type="button">New</a>
@@ -70,6 +72,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{colour}">
+                                    <p th:if="${#fields.hasErrors('colour')}" th:errors="*{colour}">Error</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -78,6 +81,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="number" min="1" max="10000" step="1" class="form-control" th:field="*{price}">
+                                    <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Error</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -86,6 +90,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{ems}">
+                                    <p th:if="${#fields.hasErrors('ems')}" th:errors="*{ems}">Error</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -94,6 +99,7 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="date" class="form-control" th:field="*{birthDate}">
+                                    <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Error</p>
                                 </div>
                             </div>
                             <div class="row">

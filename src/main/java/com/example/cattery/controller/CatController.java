@@ -6,6 +6,7 @@ import com.example.cattery.dto.CatDTO;
 import com.example.cattery.dto.ChargeRequestDTO;
 import com.example.cattery.dto.CommentDTO;
 import com.example.cattery.exceptions.CatNotAvailableForSaleException;
+import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.model.CatStatus;
 import com.example.cattery.service.*;
@@ -22,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -74,8 +76,12 @@ public class CatController {
     }
 
     @PostMapping("/")
-    public String createOrEdit(@ModelAttribute("cat") CatDTO catDTO, @RequestParam("image_files") MultipartFile[] images, BindingResult result) {
-        // todo : handle validations
+    public String createOrEdit(@Valid @ModelAttribute("cat") CatDTO catDTO, BindingResult result, @RequestParam("image_files") MultipartFile[] images, Model model) {
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> log.error(error.toString()));
+            model.addAttribute("breeds", breedService.getAllDTOs());
+            return "cat/new";
+        }
         // add images to cat
         for (MultipartFile image : images) {
             try {
@@ -84,8 +90,14 @@ public class CatController {
                 log.error(e.getMessage());
             }
         }
-        Cat savedCat = catService.create(catDTO);
-        return "redirect:/cat/" + savedCat.getId();
+        try {
+            Cat savedCat = catService.create(catDTO);
+            return "redirect:/cat/" + savedCat.getId();
+        } catch (NotFoundException nfe) {
+            result.rejectValue("breed", "not found", "breed must be chosen");
+            model.addAttribute("breeds", breedService.getAllDTOs());
+            return "cat/new";
+        }
     }
 
     @PostMapping("/{catId}/comment")

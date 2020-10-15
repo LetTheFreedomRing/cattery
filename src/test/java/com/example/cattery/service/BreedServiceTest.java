@@ -3,6 +3,7 @@ package com.example.cattery.service;
 import com.example.cattery.converter.BreedConverter;
 import com.example.cattery.converter.BreedDTOConverter;
 import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.exceptions.BreedAlreadyExistException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.repository.BreedRepository;
@@ -131,7 +132,7 @@ class BreedServiceTest {
     }
 
     @Test
-    void create() {
+    void createNewBreed() {
         // given
         Breed breed = new Breed();
         Mockito.when(breedRepository.save(ArgumentMatchers.any())).thenReturn(breed);
@@ -141,5 +142,49 @@ class BreedServiceTest {
 
         // then
         assertEquals(breed, savedBreed);
+    }
+
+    @Test
+    void createNewBreedAlreadyExists() {
+        // given
+        BreedDTO breedDTO = new BreedDTO();
+        breedDTO.setName("name");
+        Mockito.when(breedRepository.findByName(ArgumentMatchers.any())).thenReturn(Optional.of(new Breed()));
+
+        // then
+        assertThrows(BreedAlreadyExistException.class, () -> breedService.create(breedDTO));
+    }
+
+    @Test
+    void createBreedAlreadyExistsSameIds() {
+        // given
+        BreedDTO breedDTO = new BreedDTO();
+        breedDTO.setName("name");
+        breedDTO.setId(1L);
+        Breed breed = new Breed();
+        breed.setId(1L);
+        Mockito.when(breedRepository.findByName(ArgumentMatchers.any())).thenReturn(Optional.of(breed));
+        Mockito.when(breedRepository.save(ArgumentMatchers.any())).thenReturn(breed);
+
+        // when
+        Breed savedBreed = breedService.create(breedDTO);
+
+        // then
+        assertEquals(breed, savedBreed);
+    }
+
+    @Test
+    void createBreedAlreadyExistsDifferentIds() {
+        // given
+        BreedDTO breedDTO = new BreedDTO();
+        breedDTO.setName("name");
+        breedDTO.setId(1L);
+        Breed breed = new Breed();
+        breed.setId(2L);
+        Mockito.when(breedRepository.findByName(ArgumentMatchers.any())).thenReturn(Optional.of(breed));
+        Mockito.when(breedRepository.save(ArgumentMatchers.any())).thenReturn(breed);
+
+        // then
+        assertThrows(BreedAlreadyExistException.class, () -> breedService.create(breedDTO));
     }
 }

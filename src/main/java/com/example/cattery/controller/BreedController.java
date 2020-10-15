@@ -2,6 +2,7 @@ package com.example.cattery.controller;
 
 import com.example.cattery.Utils;
 import com.example.cattery.dto.BreedDTO;
+import com.example.cattery.exceptions.BreedAlreadyExistException;
 import com.example.cattery.model.Breed;
 import com.example.cattery.service.BreedService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
@@ -46,8 +48,11 @@ public class BreedController {
     }
 
     @PostMapping("/")
-    public String createOrUpdate(@ModelAttribute("breed") BreedDTO breedDTO, @RequestParam("image_file") MultipartFile image, BindingResult result) {
-        // todo : handle validations
+    public String createOrUpdate(@Valid @ModelAttribute("breed") BreedDTO breedDTO, BindingResult result, @RequestParam("image_file") MultipartFile image) {
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> log.error(error.toString()));
+            return "breed/new";
+        }
         if (!image.isEmpty()) {
             try {
                 breedDTO.setImage(Utils.convert(image.getBytes()));
@@ -55,8 +60,13 @@ public class BreedController {
                 log.error(e.getMessage());
             }
         }
-        Breed savedBreed = breedService.create(breedDTO);
-        return "redirect:/breed/" + savedBreed.getId();
+        try {
+            Breed savedBreed = breedService.create(breedDTO);
+            return "redirect:/breed/" + savedBreed.getId();
+        } catch (BreedAlreadyExistException ex) {
+            result.rejectValue("name", "duplicate", "already exists");
+            return "breed/new";
+        }
     }
 
     @GetMapping("/{breedId}/delete")
