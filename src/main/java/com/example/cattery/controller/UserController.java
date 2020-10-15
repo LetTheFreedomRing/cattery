@@ -93,8 +93,8 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public String register(@Valid @ModelAttribute("user") UserDTO userDTO, HttpServletRequest request,
-                           BindingResult result, Model model) {
+    public String register(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult result,
+                           HttpServletRequest request, Model model) {
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> {
@@ -167,17 +167,19 @@ public class UserController {
             "|| hasPrivilege('WRITE_PRIVILEGE')")
     public String updatePassword(@RequestParam(name = "newPassword") String newPassword,
                                  @RequestParam(name = "oldPassword") String oldPassword,
-                                 @RequestParam(name = "confirmPassword") String confirmPassword, Model model) {
+                                 @RequestParam(name = "confirmPassword") String confirmPassword, BindingResult result) {
 
         User user = userService.getByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
-            throw new RuntimeException("Invalid old password");
+            result.rejectValue("oldPassword", "invalid", "invalid old password");
+            return "user/updatePassword";
         }
 
         if (!(newPassword.equals(confirmPassword))) {
-            throw new RuntimeException("New and confirm passwords don't match");
+            result.rejectValue("confirmPassword", "invalid", "doesn't match with new password");
+            return "user/updatePassword";
         }
 
         userService.changePassword(user, newPassword);

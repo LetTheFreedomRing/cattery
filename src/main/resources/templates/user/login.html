@@ -16,6 +16,10 @@
     <article class="card-body">
         <h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
         <hr>
+        <div th:if="${message != null}" class="alert alert-info" th:utext="${message}">message</div>
+
+
+        <div th:if="${error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
         <p class="text-success text-center">Please input your email and password</p>
         <form action="login" method="POST">
             <div class="form-group">

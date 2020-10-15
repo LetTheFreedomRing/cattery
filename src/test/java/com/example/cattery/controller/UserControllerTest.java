@@ -84,7 +84,8 @@ class UserControllerTest {
                 .param("email", "")
                 .param("password", "password")
                 .param("matchingPassword", "passw")
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        ).andExpect(MockMvcResultMatchers.status().isOk())
+         .andExpect(MockMvcResultMatchers.view().name("user/registration"));
         Mockito.verifyNoInteractions(userService);
     }
 
