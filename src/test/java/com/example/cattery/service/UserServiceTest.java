@@ -3,8 +3,10 @@ package com.example.cattery.service;
 import com.example.cattery.converter.UserConverter;
 import com.example.cattery.converter.UserDTOConverter;
 import com.example.cattery.dto.UserDTO;
+import com.example.cattery.exceptions.CatAlreadyInWishlistException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
+import com.example.cattery.model.Cat;
 import com.example.cattery.model.Role;
 import com.example.cattery.model.User;
 import com.example.cattery.model.VerificationToken;
@@ -221,5 +223,29 @@ class UserServiceTest {
 
         // then
         Mockito.verify(tokenRepository, Mockito.times(1)).save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void addCatToWishlist() {
+        // given
+        User user = new User();
+
+        // when
+        userService.addCatToWishlist(user, new Cat());
+
+        // then
+        assertEquals(1, user.getWishList().size());
+        assertEquals(new Cat(), user.getWishList().iterator().next());
+    }
+
+    @Test
+    void addCatToWishlistCatAlreadyInWishlist() {
+        // given
+        User user = new User();
+        Cat cat = new Cat();
+        user.getWishList().add(cat);
+
+        // then
+        assertThrows(CatAlreadyInWishlistException.class, () -> userService.addCatToWishlist(user, cat));
     }
 }

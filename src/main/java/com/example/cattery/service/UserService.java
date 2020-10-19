@@ -1,7 +1,9 @@
 package com.example.cattery.service;
 
 import com.example.cattery.dto.UserDTO;
+import com.example.cattery.exceptions.CatAlreadyInWishlistException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
+import com.example.cattery.model.Cat;
 import com.example.cattery.model.User;
 import com.example.cattery.model.VerificationToken;
 
@@ -32,4 +34,6 @@ public interface UserService {
     void changePassword(User user, String password);
 
     boolean checkIfValidOldPassword(User user, String oldPassword);
+
+    void addCatToWishlist(User user, Cat cat) throws CatAlreadyInWishlistException;
 }

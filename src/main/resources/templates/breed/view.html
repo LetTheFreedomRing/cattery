@@ -64,7 +64,6 @@
               </div>
               <a type="button" class="btn btn-default" th:href="@{/cat/{id}(id=${cat.id})}">Details</a>
               <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default">Buy</a>
-              <button type="button" class="btn btn-default">Add to wishlist</button>
               <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
                 <a type="button" class="btn btn-default" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
                 <a type="button" class="btn btn-default" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>

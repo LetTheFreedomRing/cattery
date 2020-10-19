@@ -5,10 +5,12 @@ import com.example.cattery.dto.BreedDTO;
 import com.example.cattery.dto.CatDTO;
 import com.example.cattery.dto.ChargeRequestDTO;
 import com.example.cattery.dto.CommentDTO;
+import com.example.cattery.exceptions.CatAlreadyInWishlistException;
 import com.example.cattery.exceptions.CatNotAvailableForSaleException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.model.Cat;
 import com.example.cattery.model.CatStatus;
+import com.example.cattery.model.User;
 import com.example.cattery.service.*;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -23,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -55,6 +58,24 @@ public class CatController {
         model.addAttribute("cat", catService.getById(catId));
         model.addAttribute("comment", new CommentDTO());
         return "cat/view";
+    }
+
+    @GetMapping("/{catId}/wish")
+    @PreAuthorize("hasPrivilege('READ_PRIVILEGE') " +
+            "|| hasPrivilege('WRITE_PRIVILEGE')")
+    public String addToWishlist(@PathVariable(name = "catId") Long catId, Model model) {
+        Cat cat = catService.getById(catId);
+        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("cat", cat);
+        model.addAttribute("comment", new CommentDTO());
+        try {
+            userService.addCatToWishlist(user, cat);
+            model.addAttribute("success", true);
+            return "cat/view";
+        } catch (CatAlreadyInWishlistException ex) {
+            model.addAttribute("success", false);
+            return "cat/view";
+        }
     }
 
     @GetMapping("/create")

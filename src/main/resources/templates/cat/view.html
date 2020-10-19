@@ -57,6 +57,10 @@
 
     <div class="album py-2 px-5 bg-light">
         <h1 th:text="${cat.name}">Cat name</h1>
+        <div th:if="${success != null}">
+            <p th:if="${success}" class="text-success">Added to your wishlist</p>
+            <p th:unless="${success}" class="text-info">This cat is already in your wishlist</p>
+        </div>
     </div>
 
     <div class="container-fluid mt-2">
@@ -117,7 +121,7 @@
             </tr>
         </table>
             <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default">Buy</a>
-            <button type="button" class="btn btn-default">Add to wishlist</button>
+            <a type="button" th:href="@{/cat/{catId}/wish(catId=${cat.id})}" class="btn btn-default">Add to wishlist</a>
             <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
                 <a type="button" class="btn btn-default" th:href="@{cat/{catId}/edit(catId=${cat.id})}">Edit</a>
                 <a type="button" class="btn btn-default" th:href="@{cat/{catId}/delete(catId=${cat.id})}">Delete</a>

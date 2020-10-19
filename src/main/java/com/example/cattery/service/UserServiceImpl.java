@@ -3,8 +3,10 @@ package com.example.cattery.service;
 import com.example.cattery.converter.UserConverter;
 import com.example.cattery.converter.UserDTOConverter;
 import com.example.cattery.dto.UserDTO;
+import com.example.cattery.exceptions.CatAlreadyInWishlistException;
 import com.example.cattery.exceptions.NotFoundException;
 import com.example.cattery.exceptions.UserAlreadyExistException;
+import com.example.cattery.model.Cat;
 import com.example.cattery.model.User;
 import com.example.cattery.repository.RoleRepository;
 import com.example.cattery.repository.UserRepository;
@@ -114,6 +116,13 @@ public class UserServiceImpl implements UserService {
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
+    }
+
+    @Override
+    public void addCatToWishlist(User user, Cat cat) throws CatAlreadyInWishlistException {
+        if (user.getWishList().contains(cat)) throw new CatAlreadyInWishlistException();
+        user.getWishList().add(cat);
+        userRepository.save(user);
     }
 
     private boolean emailExist(String email) {
