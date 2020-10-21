@@ -36,7 +36,8 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/*/delete", "/user/*/edit",
                         "/cat/create", "/cat/*/edit", "/cat/*/delete",
                         "/breed/create", "/breed/*/edit", "/breed/*/delete").hasAuthority("WRITE_PRIVILEGE")
-                .antMatchers("/logout", "/user/view", "/user/updatePassword", "/cat/*/buy").hasAnyAuthority("READ_PRIVILEGE", "WRITE_PRIVILEGE")
+                .antMatchers("/logout", "/user/view", "/user/updatePassword",
+                        "/cat/*/buy", "/cat/*/wish").hasAnyAuthority("READ_PRIVILEGE", "WRITE_PRIVILEGE")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

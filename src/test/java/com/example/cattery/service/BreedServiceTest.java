@@ -160,6 +160,7 @@ class BreedServiceTest {
         // given
         BreedDTO breedDTO = new BreedDTO();
         breedDTO.setName("name");
+        breedDTO.setImage(new Byte[]{});
         breedDTO.setId(1L);
         Breed breed = new Breed();
         breed.setId(1L);

@@ -72,8 +72,10 @@ public class BreedServiceImpl implements BreedService {
                 (breedExists(breedDTO.getName()) && !isSameId(breedDTO, breedDTO.getName()))) {
             throw new BreedAlreadyExistException();
         } else {
-            if (breedDTO.getImage() == null) {
+            if (breedDTO.getId() == null && breedDTO.getImage() == null) {
                 breedDTO.setImage(breedImageService.getDefaultImageBytes());
+            } else if (breedDTO.getId() != null && breedDTO.getImage() == null) {
+                breedDTO.setImage(breedRepository.findById(breedDTO.getId()).get().getImage());
             }
             return breedRepository.save(breedDTOConverter.convert(breedDTO));
         }

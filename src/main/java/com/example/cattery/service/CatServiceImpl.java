@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -82,13 +80,22 @@ public class CatServiceImpl implements CatService {
             throw new NotFoundException("Breed with id : " + catDTO.getBreed().getId() + " not found");
         }
 
-        if (catDTO.getImages().size() == 0) {
-            Byte[] image = catImageService.getDefaultImageBytes();
-            catDTO.getImages().add(image);
+        if (isNew(catDTO) && isImagesArrayEmpty(catDTO.getImages())) {
+            catDTO.getImages().add(catImageService.getDefaultImageBytes());
+        } else if (!isNew(catDTO) && isImagesArrayEmpty(catDTO.getImages())) {
+            catDTO.setImages(catRepository.findById(catDTO.getId()).get().getImages());
         }
         Cat cat = catDTOConverter.convert(catDTO);
         cat.setLastUpdated(LocalDate.now());
         return catRepository.save(cat);
+    }
+
+    private boolean isNew(CatDTO catDTO) {
+        return catDTO.getId() == null;
+    }
+
+    private boolean isImagesArrayEmpty(List<Byte[]> images) {
+        return images.size() == 0 || (images.size() == 1 && images.get(0).length == 0);
     }
 
     private boolean breedExists(Long id) {
