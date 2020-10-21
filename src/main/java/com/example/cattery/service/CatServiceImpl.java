@@ -13,6 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -59,6 +64,14 @@ public class CatServiceImpl implements CatService {
         cat.setOwner(user);
         cat.setStatus(CatStatus.SOLD);
         catRepository.save(cat);
+    }
+
+    @Override
+    public Collection<Cat> findCats(String searchName) {
+        return StreamSupport.stream(catRepository.findAll().spliterator(), false)
+                .filter(cat -> cat.getName().toLowerCase().contains(searchName.toLowerCase()))
+                .sorted(Comparator.comparing(Cat::getName))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override

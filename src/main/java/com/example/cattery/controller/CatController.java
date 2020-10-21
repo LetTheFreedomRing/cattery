@@ -60,6 +60,12 @@ public class CatController {
         return "cat/view";
     }
 
+    @GetMapping("/search")
+    public String searchCat(@RequestParam(name = "searchName") String searchName, Model model) {
+        model.addAttribute("cats", catService.findCats(searchName));
+        return "cat/searchResult";
+    }
+
     @GetMapping("/{catId}/wish")
     @PreAuthorize("hasPrivilege('READ_PRIVILEGE') " +
             "|| hasPrivilege('WRITE_PRIVILEGE')")
