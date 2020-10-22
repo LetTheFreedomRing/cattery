@@ -58,8 +58,8 @@
     <div class="album py-2 px-5 bg-light">
         <h1 th:text="${cat.name}">Cat name</h1>
         <div th:if="${success != null}">
-            <p th:if="${success}" class="text-success">Added to your wishlist</p>
-            <p th:unless="${success}" class="text-info">This cat is already in your wishlist</p>
+            <p th:if="${success}" class="text-success" th:text="#{label.cat.wishlist.added}">Added to your wishlist</p>
+            <p th:unless="${success}" class="text-info" th:text="#{label.cat.wishlist.alreadyIn}">This cat is already in your wishlist</p>
         </div>
     </div>
 
@@ -84,54 +84,54 @@
         <div>
         <table class="table table-striped w-auto">
             <tr>
-                <td>Breed: </td>
+                <td th:text="#{label.cat.breed} + ':'">Breed: </td>
                 <td th:text="${cat.breed.name}">Breed</td>
             </tr>
             <tr>
-                <td>Gender: </td>
+                <td th:text="#{label.cat.gender} + ':'">Gender: </td>
                 <td th:text="${cat.gender}">Gender</td>
             </tr>
             <tr>
-                <td>Birth date: </td>
+                <td th:text="#{label.cat.birthDate} + ':'">Birth date: </td>
                 <td th:text="${cat.birthDate}">Birth date</td>
             </tr>
             <tr>
-                <td>Colour: </td>
+                <td th:text="#{label.cat.colour} + ':'">Colour: </td>
                 <td th:text="${cat.colour}">Colour</td>
             </tr>
             <tr>
-                <td>Class: </td>
+                <td th:text="#{label.cat.class} + ':'">Class: </td>
                 <td th:text="${cat.catClass}">Class</td>
             </tr>
             <tr>
-                <td>EMS: </td>
+                <td th:text="#{label.cat.ems} + ':'">EMS: </td>
                 <td th:text="${cat.ems}">EMS</td>
             </tr>
             <tr>
-                <td>Price: </td>
+                <td th:text="#{label.cat.price} + ':'">Price: </td>
                 <td th:text="${cat.price}">Price</td>
             </tr>
             <tr>
-                <td>Status: </td>
+                <td th:text="#{label.cat.status} + ':'">Status: </td>
                 <td th:text="${cat.status}">Status</td>
             </tr>
             <tr>
-                <td>Last updated: </td>
+                <td th:text="#{label.cat.lastUpdated} + ':'">Last updated: </td>
                 <td th:text="${cat.lastUpdated}">Last updated</td>
             </tr>
         </table>
-            <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default">Buy</a>
-            <a type="button" th:href="@{/cat/{catId}/wish(catId=${cat.id})}" class="btn btn-default">Add to wishlist</a>
+            <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default" th:text="#{label.cat.buy}">Buy</a>
+            <a type="button" th:href="@{/cat/{catId}/wish(catId=${cat.id})}" class="btn btn-default" th:text="#{label.cat.wishlist.add}">Add to wishlist</a>
             <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
-                <a type="button" class="btn btn-default" th:href="@{/cat/{catId}/edit(catId=${cat.id})}">Edit</a>
-                <a type="button" class="btn btn-default" th:href="@{/cat/{catId}/delete(catId=${cat.id})}">Delete</a>
+                <a type="button" class="btn btn-default" th:href="@{/cat/{catId}/edit(catId=${cat.id})}" th:text="#{label.cat.edit}">Edit</a>
+                <a type="button" class="btn btn-default" th:href="@{/cat/{catId}/delete(catId=${cat.id})}" th:text="#{label.cat.delete}">Delete</a>
             </div>
         </div>
 
         <div class="col-md-4 text-center">
             <div class="container-fluid">
                 <div class="page-header">
-                    <h3 class="reviews">Comments</h3>
+                    <h3 class="reviews" th:text="#{label.cat.comments}">Comments</h3>
                 </div>
                 <div th:each="comment : ${cat.comments}" class="album bg-light">
                     <p class="float-right px-3" th:text="${comment.date}">22.04.2019</p>
@@ -146,10 +146,10 @@
                             <textarea class="form-control" id="commentFormControlTextarea" th:field="*{message}" rows="5"></textarea>
                         </div>
                         <div sec:authorize="isAuthenticated()">
-                            <button class="btn btn-secondary btn-circle float-right" type="submit">Comment</button>
+                            <button class="btn btn-secondary btn-circle float-right" type="submit" th:text="#{label.cat.comment}">Comment</button>
                         </div>
                         <div sec:authorize="isAnonymous()">
-                            <a class="btn btn-secondary btn-circle float-right" th:href="@{/user/login}" type="button">Login</a>
+                            <a class="btn btn-secondary btn-circle float-right" th:href="@{/user/login}" type="button" th:text="#{label.login}">Login</a>
                         </div>
                     </form>
                 </div>

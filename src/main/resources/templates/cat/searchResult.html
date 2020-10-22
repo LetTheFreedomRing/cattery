@@ -10,15 +10,15 @@
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
-<div class="mx-5 my-2" th:text="${'Found cats : ' + cats.size()}"> Found cats : 10</div>
+<div class="mx-5 my-2" th:text="#{label.searchResult.foundCats} + ' : ' + ${cats.size()}"> Found cats : 10</div>
 <div class="container">
     <table class="table">
         <thead class="thead-light">
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Image</th>
-            <th scope="col">Name</th>
-            <th scope="col">Action</th>
+            <th scope="col" th:text="#{label.searchResult.image}">Image</th>
+            <th scope="col" th:text="#{label.searchResult.name}">Name</th>
+            <th scope="col" th:text="#{label.searchResult.action}">Action</th>
         </tr>
         </thead>
         <tbody>

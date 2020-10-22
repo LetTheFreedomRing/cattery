@@ -19,7 +19,7 @@
                 <div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Name</label>
+                            <label th:text="#{label.cat.name}">Name</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.name}">Cat Name</p>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Breed</label>
+                            <label th:text="#{label.cat.breed}">Breed</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.breed}">Cat Breed</p>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Gender</label>
+                            <label th:text="#{label.cat.gender}">Gender</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.gender}">Gender</p>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Colour</label>
+                            <label th:text="#{label.cat.colour}">Colour</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.colour}">Colour</p>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>EMS</label>
+                            <label th:text="#{label.cat.ems}">EMS</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.ems}">EMS</p>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Birth Date</label>
+                            <label th:text="#{label.cat.birthDate}">Birth Date</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.birthDate}">12.12.12</p>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Class</label>
+                            <label th:text="#{label.cat.class}">Class</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${cat.catClass}">Cat class</p>
@@ -77,7 +77,7 @@
                         <input type='hidden' th:value='${cat.price}' name='amount' />
                         <div class="row">
                             <div class="col-md-6">
-                                <label>Price</label>
+                                <label th:text="#{label.cat.price}">Price</label>
                             </div>
                             <div class="col-md-6">
                                 <div class="row">

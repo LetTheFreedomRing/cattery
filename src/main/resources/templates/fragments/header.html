@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
@@ -20,14 +20,14 @@
                 <strong class="mx-2">Cattery</strong>
             </a>
             <form class="form-inline mt-2 mt-md-0" method="get" th:action="@{/cat/search}">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" th:name="searchName">
-                <button class="btn btn-outline-light mx-1 my-2 my-sm-0" type="submit">Search</button>
+                <input class="form-control mr-sm-2" type="text" th:placeholder="#{label.search}" aria-label="Search"  th:name="searchName">
+                <button class="btn btn-outline-light mx-1 my-2 my-sm-0" type="submit" th:text="#{label.search}">Search</button>
                 <div sec:authorize="isAnonymous()">
-                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/login}">Login</a>
-                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/register}">Sign up</a>
+                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/login}" th:text="#{label.login}">Login</a>
+                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/register}" th:text="#{label.signUp}">Sign up</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/logout}">Logout</a>
+                    <a type="button" class="btn btn-secondary mx-1 my-2 my-sm-0" th:href="@{/user/logout}" th:text="#{label.logout}">Logout</a>
                 </div>
             </form>
         </div>

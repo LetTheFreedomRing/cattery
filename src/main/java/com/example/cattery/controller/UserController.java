@@ -167,18 +167,18 @@ public class UserController {
             "|| hasPrivilege('WRITE_PRIVILEGE')")
     public String updatePassword(@RequestParam(name = "newPassword") String newPassword,
                                  @RequestParam(name = "oldPassword") String oldPassword,
-                                 @RequestParam(name = "confirmPassword") String confirmPassword, BindingResult result) {
+                                 @RequestParam(name = "confirmPassword") String confirmPassword, Model model) {
 
         User user = userService.getByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
-            result.rejectValue("oldPassword", "invalid", "invalid old password");
+            model.addAttribute("oldPasswordError","invalid old password");
             return "user/updatePassword";
         }
 
         if (!(newPassword.equals(confirmPassword))) {
-            result.rejectValue("confirmPassword", "invalid", "doesn't match with new password");
+            model.addAttribute("confirmPasswordError","doesn't match with new password");
             return "user/updatePassword";
         }
 

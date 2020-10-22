@@ -18,12 +18,12 @@
                 <div class="pannel-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h1 class="panel-title">Edit Breed Information</h1>
+                            <h1 class="panel-title" th:text="#{label.breed.editBreedInformation}">Edit Breed Information</h1>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Name:</label>
+                                    <label th:text="#{label.breed.name} + ':'">Name:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{name}"/>
@@ -32,33 +32,33 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Image:</label>
+                                    <label th:text="#{label.breed.image} + ':'">Image:</label>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <input id="image_file" name="image_file" type="file" class="file">
                                 </div>
                             </div>
                                 <div class="form-group">
-                                    <label for="overviewFormControlTextarea">Overview</label>
+                                    <label for="overviewFormControlTextarea" th:text="#{label.breed.overview}">Overview</label>
                                     <textarea class="form-control" id="overviewFormControlTextarea" rows="3" th:field="*{overview}"></textarea>
                                     <p th:if="${#fields.hasErrors('overview')}" th:errors="*{overview}">Error</p>
                                 </div>
                             <div class="form-group">
-                                <label for="historyFormControlTextarea">History</label>
+                                <label for="historyFormControlTextarea" th:text="#{label.breed.history}">History</label>
                                 <textarea class="form-control" id="historyFormControlTextarea" rows="3" th:field="*{history}"></textarea>
                                 <p th:if="${#fields.hasErrors('history')}" th:errors="*{history}">Error</p>
                             </div>
                             <div class="form-group">
-                                <label for="careFormControlTextarea">Care</label>
+                                <label for="careFormControlTextarea" th:text="#{label.breed.care}">Care</label>
                                 <textarea class="form-control" id="careFormControlTextarea" rows="3" th:field="*{care}"></textarea>
                                 <p th:if="${#fields.hasErrors('care')}" th:errors="*{care}">Error</p>
                             </div>
                             <div class="form-group">
-                                <label for="temperFormControlTextarea">Temper</label>
+                                <label for="temperFormControlTextarea" th:text="#{label.breed.temper}">Temper</label>
                                 <textarea class="form-control" id="temperFormControlTextarea" rows="3" th:field="*{temper}"></textarea>
                                 <p th:if="${#fields.hasErrors('temper')}" th:errors="*{temper}">Error</p>
                             </div>
-                            <button type="submit" class="btn btn-secondary">Submit</button>
+                            <button type="submit" class="btn btn-secondary" th:text="#{label.submit}">Submit</button>
                         </div>
                     </div>
                 </div>

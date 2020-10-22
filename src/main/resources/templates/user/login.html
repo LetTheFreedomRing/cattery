@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Login Form</title>
@@ -14,13 +14,13 @@
     <aside class="col-sm-4">
 <div class="card">
     <article class="card-body">
-        <h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
+        <h4 class="card-title text-center mb-4 mt-1" th:text="#{label.login}">Sign in</h4>
         <hr>
         <div th:if="${message != null}" class="alert alert-info" th:utext="${message}">message</div>
 
 
         <div th:if="${error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
-        <p class="text-success text-center">Please input your email and password</p>
+        <p class="text-success text-center" th:text="#{label.inputEmailAndPassword}">Please input your email and password</p>
         <form action="login" method="POST">
             <div class="form-group">
                 <div class="input-group">
@@ -31,7 +31,7 @@
                             </svg>
                         </span>
                     </div>
-                    <input name="username" class="form-control" placeholder="Email" type="email">
+                    <input name="username" class="form-control" th:placeholder="#{label.email}" type="email">
                 </div> <!-- input-group.// -->
             </div> <!-- form-group// -->
             <div class="form-group">
@@ -48,11 +48,11 @@
                 </div> <!-- input-group.// -->
             </div> <!-- form-group// -->
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block"> Login  </button>
+                <button type="submit" class="btn btn-primary btn-block" th:text="#{label.login}">Login</button>
             </div> <!-- form-group// -->
             <div class="row justify-content-center">
-                <p class="text-center"><a th:href="@{/user/forgotPassword}" class="btn">Forgot password?</a></p>
-                <p class="text-center"><a th:href="@{/user/register}" class="btn">Create new account</a></p>
+                <p class="text-center"><a th:href="@{/user/forgotPassword}" class="btn" th:text="#{label.forgotPassword}">Forgot password?</a></p>
+                <p class="text-center"><a th:href="@{/user/register}" class="btn" th:text="#{label.createNewAccount}">Create new account</a></p>
             </div>
         </form>
     </article>

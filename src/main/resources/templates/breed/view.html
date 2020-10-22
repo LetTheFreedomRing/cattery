@@ -17,14 +17,14 @@
               <div class="row">
                   <h2 class="card-title" th:text="${breed.name}">Breed name</h2>
                   <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
-                    <a type="button" class="btn btn-default" th:href="@{/breed/{breedId}/edit(breedId=${breed.id})}">Edit</a>
+                    <a type="button" class="btn btn-default" th:href="@{/breed/{breedId}/edit(breedId=${breed.id})}" th:text="#{label.breed.edit}">Edit</a>
                   </div>
               </div>
               <img class="rounded float-left" style="margin-right: 10px;" th:src="@{'/breed/' + ${breed.id} + '/breedimage'}" width="400" height="300">
               <p th:text="${breed.overview}"> The British Shorthair is solid and muscular with an easygoing personality. As befits his British heritage, he is slightly reserved, but once he gets to know someone he’s quite affectionate. His short, dense coat comes in many colors and patterns and should be brushed two or three times a week to remove dead hair </p>
-              <button class="btn btn-default collapsible" onclick="setContent('History')">History</button>
-              <button class="btn btn-default collapsible" onclick="setContent('Care')">Care</button>
-              <button class="btn btn-default collapsible" onclick="setContent('Temper')">Temper</button>
+              <button class="btn btn-default collapsible" onclick="setContent('History')" th:text="#{label.breed.history}">History</button>
+              <button class="btn btn-default collapsible" onclick="setContent('Care')" th:text="#{label.breed.care}">Care</button>
+              <button class="btn btn-default collapsible" onclick="setContent('Temper')" th:text="#{label.breed.temper}">Temper</button>
               <div id="content"></div>
               </div>
           <div style="clear:both;"></div>
@@ -36,37 +36,37 @@
               <div class="row">
                   <table class="table table-striped w-auto">
                       <tr>
-                          <td>Name: </td>
+                          <td th:text="#{label.cat.name} + ':'">Name: </td>
                           <td th:text="${cat.name}">Name</td>
                       </tr>
                       <tr>
-                          <td>Class: </td>
+                          <td th:text="#{label.cat.class} + ':'">Class: </td>
                           <td th:text="${cat.catClass}">Class</td>
                       </tr>
                       <tr>
-                        <td>Gender: </td>
+                        <td th:text="#{label.cat.gender} + ':'">Gender: </td>
                         <td th:text="${cat.gender}">Gender</td>
                     </tr>
                       <tr>
-                          <td>Colour: </td>
+                          <td th:text="#{label.cat.colour} + ':'">Colour: </td>
                           <td th:text="${cat.colour}">Colour</td>
                       </tr>
                       <tr>
-                          <td>Price: </td>
+                          <td th:text="#{label.cat.price} + ':'">Price: </td>
                           <td th:text="${cat.price}">Price</td>
                       </tr>
                       <tr>
-                          <td>Status: </td>
+                          <td th:text="#{label.cat.status} + ':'">Status: </td>
                           <td th:text="${cat.status}">Status</td>
                       </tr>
                   </table>
 
               </div>
-              <a type="button" class="btn btn-default" th:href="@{/cat/{id}(id=${cat.id})}">Details</a>
-              <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default">Buy</a>
+              <a type="button" class="btn btn-default" th:href="@{/cat/{id}(id=${cat.id})}" th:text="#{label.cat.details}">Details</a>
+              <a type="button" th:href="@{/cat/{catId}/buy(catId=${cat.id})}" class="btn btn-default" th:text="#{label.cat.buy}">Buy</a>
               <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
-                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
-                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>
+                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/edit(id=${cat.id})}" th:text="#{label.cat.edit}">Edit</a>
+                <a type="button" class="btn btn-default" th:href="@{/cat/{id}/delete(id=${cat.id})}" th:text="#{label.cat.delete}">Delete</a>
               </div>
 
               <hr>

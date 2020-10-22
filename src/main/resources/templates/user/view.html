@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title th:text="${user.name}">User</title>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-md-2">
-            <a th:type="button" th:href="@{/user/updatePassword}" class="btn btn-default">Change password</a>
+            <a th:type="button" th:href="@{/user/updatePassword}" class="btn btn-default" th:text="#{label.changePassword}">Change password</a>
         </div>
     </div>
     <div class="row">
@@ -29,7 +29,7 @@
                 <div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Name</label>
+                            <label th:text="#{label.user.name}">Name</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${user.name}">Username</p>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Email</label>
+                            <label th:text="#{label.user.email}">Email</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${user.email}">usermail@mail.com</p>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Role</label>
+                            <label th:text="#{label.user.roles}">Role</label>
                         </div>
                         <div class="col-md-6">
                             <div class="row container-fluid">
@@ -55,7 +55,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Registration date</label>
+                            <label th:text="#{label.user.registrationDate}">Registration date</label>
                         </div>
                         <div class="col-md-6">
                             <p th:text="${user.registrationDate}">12.12.12</p>
@@ -64,10 +64,10 @@
                 </div>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="mycats-tab" data-toggle="tab" href="#mycats" role="tab" aria-controls="mycats" aria-selected="true">My cats</a>
+                        <a class="nav-link active" id="mycats-tab" data-toggle="tab" href="#mycats" role="tab" aria-controls="mycats" aria-selected="true" th:text="#{label.user.cats}">My cats</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="wishlist-tab" data-toggle="tab" href="#wishlist" role="tab" aria-controls="wishlist" aria-selected="false">Wishlist</a>
+                        <a class="nav-link" id="wishlist-tab" data-toggle="tab" href="#wishlist" role="tab" aria-controls="wishlist" aria-selected="false" th:text="#{label.user.wishlist}">Wishlist</a>
                     </li>
                 </ul>
                 <div class="tab-pane fade show active" id="mycats" role="tabpanel" aria-labelledby="mycats-tab">
@@ -76,27 +76,27 @@
                         <div class="row">
                             <table class="table table-striped w-auto">
                                 <tr>
-                                    <td>Name: </td>
+                                    <td th:text="#{label.cat.name} + ': '">Name: </td>
                                     <td th:text="${cat.name}">Name</td>
                                 </tr>
                                 <tr>
-                                    <td>Class: </td>
+                                    <td th:text="#{label.cat.class} + ': '">Class: </td>
                                     <td th:text="${cat.catClass}">Class</td>
                                 </tr>
                                 <tr>
-                                    <td>Gender: </td>
+                                    <td th:text="#{label.cat.gender} + ': '">Gender: </td>
                                     <td th:text="${cat.gender}">Gender</td>
                                 </tr>
                                 <tr>
-                                    <td>Colour: </td>
+                                    <td th:text="#{label.cat.colour} + ': '">Colour: </td>
                                     <td th:text="${cat.colour}">Colour</td>
                                 </tr>
                                 <tr>
-                                    <td>Price: </td>
+                                    <td th:text="#{label.cat.price} + ': '">Price: </td>
                                     <td th:text="${cat.price}">Price</td>
                                 </tr>
                                 <tr>
-                                    <td>Status: </td>
+                                    <td th:text="#{label.cat.status} + ': '">Status: </td>
                                     <td th:text="${cat.status}">Status</td>
                                 </tr>
                             </table>
@@ -110,27 +110,27 @@
                         <div class="row">
                             <table class="table table-striped w-auto">
                                 <tr>
-                                    <td>Name: </td>
+                                    <td th:text="#{label.cat.name} + ': '">Name: </td>
                                     <td th:text="${cat.name}">Name</td>
                                 </tr>
                                 <tr>
-                                    <td>Class: </td>
+                                    <td th:text="#{label.cat.class} + ': '">Class: </td>
                                     <td th:text="${cat.catClass}">Class</td>
                                 </tr>
                                 <tr>
-                                    <td>Gender: </td>
+                                    <td th:text="#{label.cat.gender} + ': '">Gender: </td>
                                     <td th:text="${cat.gender}">Gender</td>
                                 </tr>
                                 <tr>
-                                    <td>Colour: </td>
+                                    <td th:text="#{label.cat.colour} + ': '">Colour: </td>
                                     <td th:text="${cat.colour}">Colour</td>
                                 </tr>
                                 <tr>
-                                    <td>Price: </td>
+                                    <td th:text="#{label.cat.price} + ': '">Price: </td>
                                     <td th:text="${cat.price}">Price</td>
                                 </tr>
                                 <tr>
-                                    <td>Status: </td>
+                                    <td th:text="#{label.cat.status} + ': '">Status: </td>
                                     <td th:text="${cat.status}">Status</td>
                                 </tr>
                             </table>

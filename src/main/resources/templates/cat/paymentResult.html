@@ -14,13 +14,13 @@
 
 <h3 th:if='${error}' th:text='${error}' style='color: red;'></h3>
 <div th:unless='${error}'>
-    <h3 style='color: green;'>Success!</h3>
-    <div>Id.: <span th:text='${id}' /></div>
-    <div>Status: <span th:text='${status}' /></div>
-    <div>Charge id.: <span th:text='${chargeId}' /></div>
-    <div>Balance transaction id.: <span th:text='${balance_transaction}' /></div>
+    <h3 style='color: green;' th:text="#{label.paymentResult.success} + '!'">Success!</h3>
+    <div th:text="#{label.paymentResult.id} + ':'">Id.: <span th:text='${id}' /></div>
+    <div th:text="#{label.paymentResult.status} + ':'">Status: <span th:text='${status}' /></div>
+    <div th:text="#{label.paymentResult.chargeId} + ':'">Charge id.: <span th:text='${chargeId}' /></div>
+    <div th:text="#{label.paymentResult.balanceTransactionId} + ':'">Balance transaction id.: <span th:text='${balance_transaction}' /></div>
 </div>
-<a href='/'>Home</a>
+<a href='/' th:text="#{label.home} + ':'">Home</a>
 
 <!-- jQuery library -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

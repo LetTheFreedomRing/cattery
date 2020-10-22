@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
@@ -45,7 +45,7 @@
                                 <p class="card-test" th:text="${breed.overview}"></p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/breed/{id}(id=${breed.id})}">View more</a>
+                                        <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/breed/{id}(id=${breed.id})}" th:text="#{label.breed.view}">View more</a>
                                     </div>
                                 </div>
                             </div>
@@ -57,33 +57,33 @@
                                 <img class="bd-placeholder-img card-img-top" th:src="@{'/cat/' + ${cat.id} + '/catimage/0'}" width="100%" height="225">
                                 <div class="card-body">
                                     <p th:inline="text">
-                                        <b>Name: </b>
+                                        <b th:text="#{label.cat.name} + ': '">Name: </b>
                                         [[${cat.name}]]
                                     </p>
                                     <p th:inline="text">
-                                        <b>Gender: </b>
-                                        [[${cat.gender.name().toLowerCase()}]]
+                                        <b th:text="#{label.cat.gender} + ': '">Gender: </b>
+                                        [[${cat.gender.displayValue}]]
                                     </p>
                                     <p th:inline="text">
-                                        <b>Date of birth: </b>
+                                        <b th:text="#{label.cat.birthDate} + ': '">Date of birth: </b>
                                         [[${cat.birthDate}]]
                                     </p>
                                     <hr style="border: 1px dashed black;" />
                                     <p th:inline="text">
-                                        <b>Price: </b>
+                                        <b th:text="#{label.cat.price} + ': '">Price: </b>
                                         [[${cat.price + '$'}]]
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}(id=${cat.id})}">View</a>
+                                            <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}(id=${cat.id})}" th:text="#{label.cat.view}">View</a>
                                             <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
-                                                <a  type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/edit(id=${cat.id})}">Edit</a>
+                                                <a  type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/edit(id=${cat.id})}" th:text="#{label.cat.edit}">Edit</a>
                                             </div>
                                             <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')">
-                                                <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/delete(id=${cat.id})}">Delete</a>
+                                                <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{/cat/{id}/delete(id=${cat.id})}" th:text="#{label.cat.delete}">Delete</a>
                                             </div>
                                         </div>
-                                        <small class="text-muted ml-2" th:text="${'Updated: ' + cat.lastUpdated}"></small>
+                                        <small class="text-muted ml-2" th:text="#{label.cat.lastUpdated} + ${': ' + cat.lastUpdated}"></small>
                                     </div>
                                 </div>
                             </div>

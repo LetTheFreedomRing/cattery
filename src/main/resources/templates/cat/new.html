@@ -18,12 +18,12 @@
                 <div class="pannel-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h1 class="panel-title">Edit Cat Information</h1>
+                            <h1 class="panel-title" th:text="#{label.cat.editCatInformation}">Edit Cat Information</h1>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Name:</label>
+                                    <label th:text="#{label.cat.name} + ':'">Name:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{name}"/>
@@ -32,22 +32,22 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Breed:</label>
+                                    <label th:text="#{label.cat.breed} + ':'">Breed:</label>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <select class="form-control" th:field="*{breed.id}">
-                                        <option value="">Choose from existing</option>
+                                        <option value="" th:text="#{label.cat.breed.choose}">Choose from existing</option>
                                         <option th:each="breed : ${breeds}" th:value="${breed.id}" th:text="${breed.name}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}">Error</p>
                                 </div>
                                 <div class="col-md-3 form-group">
-                                    <a class="btn btn-secondary" th:href="@{/breed/create}" type="button">New</a>
+                                    <a class="btn btn-secondary" th:href="@{/breed/create}" type="button" th:text="#{label.cat.breed.new}">New</a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Images:</label>
+                                    <label th:text="#{label.cat.images} + ':'">Images:</label>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <input id="image_files" name="image_files" type="file" class="file" multiple>
@@ -55,7 +55,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Gender:</label>
+                                    <label th:text="#{label.cat.gender} + ':'">Gender:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select th:field="*{gender}">
@@ -68,7 +68,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Colour:</label>
+                                    <label th:text="#{label.cat.colour} + ':'">Colour:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{colour}">
@@ -77,7 +77,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Price:</label>
+                                    <label th:text="#{label.cat.price} + ':'">Price:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="number" min="1" max="10000" step="1" class="form-control" th:field="*{price}">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>EMS:</label>
+                                    <label th:text="#{label.cat.ems} + ':'">EMS:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="text" class="form-control" th:field="*{ems}">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Birth date:</label>
+                                    <label th:text="#{label.cat.birthDate} + ':'">Birth date:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <input type="date" class="form-control" th:field="*{birthDate}">
@@ -104,7 +104,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Class:</label>
+                                    <label th:text="#{label.cat.class} + ':'">Class:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select th:field="*{catClass}">
@@ -117,7 +117,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
-                                    <label>Status:</label>
+                                    <label th:text="#{label.cat.status} + ':'">Status:</label>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select th:field="*{status}">
@@ -128,7 +128,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-secondary">Submit</button>
+                            <button type="submit" class="btn btn-secondary" th:text="#{label.submit}">Submit</button>
                         </div>
                     </div>
                 </div>

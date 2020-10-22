@@ -7,12 +7,14 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode(exclude = {"owner", "comments"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"owner", "comments", "isWishedBy"}, callSuper = false)
 public class Cat extends BaseEntity {
     private String name;
     private Gender gender;
@@ -36,5 +38,14 @@ public class Cat extends BaseEntity {
     @ElementCollection
     @Lob
     private List<Byte[]> images = new ArrayList<>();
+    @ManyToMany(mappedBy = "wishList")
+    private Set<User> isWishedBy = new HashSet<>();
+
+    @PreRemove
+    private void removeFromUsersWishlist() {
+        for (User user : isWishedBy) {
+            user.getWishList().remove(this);
+        }
+    }
 
 }
